@@ -14,8 +14,8 @@ class CreateUserSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs['password'] != attrs['confirm_password']:
             raise serializers.ValidationError({
-                'password': _('პაროლის ფილდები არ დაემთხვა'),
-                'confirm_password': _('პაროლის ფილდები არ დაემთხვა'),
+                'password': _('The password fields did not match'),
+                'confirm_password': _('The password fields did not match'),
             })
         return attrs
 
