@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik+Beastly&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rubik+Beastly&display=swap");
 
 * {
   margin: 0;
@@ -8,17 +9,36 @@
 }
 
 body {
-  height: 80vh;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
+  height: 100vh;
+  position: relative;
+}
+
+.header {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Lobster", cursive;
+  font-size: xxx-large;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.header h1 {
+  color: rgb(245, 161, 161);
+  text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #f3a4a4,
+    0 0 82px #f3a4a4, 0 0 92px #f3a4a4, 0 0 102px #f3a4a4, 0 0 151px #f3a4a4;
 }
 
 .mainEl {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -20%);
 }
 
 .btn {
@@ -30,7 +50,7 @@ body {
 
 .loginBtn {
   margin-bottom: 0.5em;
-  padding: 0.2em 2em 0.2em 3.5em;
+  padding: 0.4em 3em 0.4em 4.5em;
   font-size: xx-large;
   letter-spacing: 1.5em;
   text-transform: uppercase;
@@ -43,7 +63,7 @@ body {
 
 .registerBtn {
   margin-top: 0.5em;
-  padding: 0.4em 2em 0.4em 3em;
+  padding: 0.6em 3em 0.6em 4em;
   font-family: "Rubik Beastly", cursive;
   font-size: medium;
   letter-spacing: 1em;
