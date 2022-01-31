@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import F
 from django.utils.translation import gettext_lazy as _
 
 from game.choices import LanguageType, GameStatus, TeamType
@@ -31,12 +32,21 @@ class Game(models.Model):
     players_in_lobby = models.ManyToManyField(to=User,
                                               related_name='games',
                                               verbose_name=_('Players in lobby'))
-    status = models.IntegerField(verbose_name=_('Status'), choices=GameStatus.choices)
+    status = models.IntegerField(verbose_name=_('Status'), choices=GameStatus.choices, default=GameStatus.PENDING)
+    last_turn = models.IntegerField(verbose_name=_('Last Turn'), choices=TeamType.choices, blank=True, null=True)
     created = models.DateTimeField(verbose_name=_('Created date'), auto_now_add=True)
 
     class Meta:
         verbose_name = _('Game')
         verbose_name_plural = _('Games')
+
+    def change_turn(self):
+        self.last_turn = TeamType.BLUE - F('last_turn')
+        self.save(update_fields=['last_turn'])
+
+    def set_status_finished(self):
+        self.status = GameStatus.FINISHED
+        self.save(update_fields=['status'])
 
 
 class Spymaster(AbstractPlayer):
@@ -69,6 +79,10 @@ class GameCard(models.Model):
     class Meta:
         verbose_name = _('Game Card')
         verbose_name_plural = _('Game Cards')
+
+    def set_guessed(self):
+        self.is_guessed = True
+        self.save(update_fields=['is_guessed'])
 
 
 class Card(models.Model):
