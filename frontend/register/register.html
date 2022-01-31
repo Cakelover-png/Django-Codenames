@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="register.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main class="loginMain">
+      <header class="header">
+        <h1 class="regHeader">Registration Form</h1>
+      </header>
+      <form action="login.html" method="post" id="myForm" class="loginForm">
+        <div class="col userName">
+          <label for="user" id="userLabel">Username</label>
+          <input type="text" id="user" name="username" />
+        </div>
+        <div class="col userPassword">
+          <label for="pasw" id="passwordLabel">password</label>
+          <input type="password" id="pasw" name="password" />
+        </div>
+        <div class="col confirmPassword">
+          <label for="confirm" id="confirmLabel">Confirm password</label>
+          <input type="password" id="confirm" name="confirm_password" />
+        </div>
+        <div class="submitBtn">
+          <input type="submit" value="register" class="sendBtn" />
+        </div>
+      </form>
+    </main>
+
+    <script src="../script.js"></script>
+  </body>
+</html>
