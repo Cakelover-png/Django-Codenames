@@ -1,0 +1,98 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  background-color: #47126b;
+  position: relative;
+}
+
+.loginMain {
+  width: 50%;
+  height: 80%;
+  background-color: #240046;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 20px;
+  box-shadow: 0px 0px 7px #440510, 0px 0px 30px #440510;
+}
+
+.loginForm {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginForm div {
+  margin-top: 2em;
+}
+
+.loginForm input[type="text"],
+.loginForm input[type="password"] {
+  /* padding: 1em 4em 1em 4em; */
+  padding: 3px;
+  width: 300px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+}
+
+.loginForm label {
+  text-align: center;
+  text-transform: capitalize;
+  color: #c32f27;
+  font-size: xx-large;
+  margin-bottom: 0.4em;
+}
+
+#user,
+#pasw,
+#confirm {
+  margin-left: 1em;
+}
+
+#passwordLabel,
+#confirmLabel {
+  padding-left: 0.8em;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.header {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #be1d15;
+  text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #8a110a,
+    0 0 82px #8a110a, 0 0 92px #8a110a, 0 0 102px #8a110a, 0 0 151px #8a110a;
+}
+
+.sendBtn {
+  padding: 1em 3em;
+  background-color: #d90429;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-transform: uppercase;
+  color: #fff;
+  letter-spacing: 2px;
+  font-size: medium;
+}
+
+.sendBtn:hover {
+  background-color: #fff;
+  color: #d90429;
+  border-color: #d90429;
+}
