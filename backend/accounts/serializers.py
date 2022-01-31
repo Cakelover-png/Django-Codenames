@@ -22,3 +22,9 @@ class CreateUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data) -> 'User':
         validated_data.pop('confirm_password')
         return User.objects.create_user(**validated_data)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id', 'username')
