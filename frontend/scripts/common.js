@@ -45,11 +45,11 @@ if (localStorage.getItem("access")) {
         } else {
           localStorage.removeItem("access");
           localStorage.removeItem("refresh");
-          window.location = "../login/login.html";
+          window.location = "../html/login.html";
         }
       };
     } else {
-      window.location = "../lobby/lobby.html";
+      window.location = "../html/lobby.html";
     }
   };
 }
