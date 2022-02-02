@@ -1,3 +1,8 @@
+"use strict";
+export const AUTHheader = [
+  "Authorization",
+  "JWT " + localStorage.getItem("access"),
+];
 export function objToString(data) {
   let str = "";
   for (let [key, value] of Object.entries(data)) {
@@ -53,5 +58,33 @@ export function postFormXHR(url, headers, data) {
   //Send the proper header information along with the request
   for (const header of headers) {
     xhr.setRequestHeader(header[0], header[1]);
+  }
+}
+
+export function createGameListTags(creatorArg, count, status) {
+  const main = document.querySelector(".main");
+
+  const gameDiv = document.createElement("div");
+  gameDiv.className = "game";
+  const creator = document.createElement("p");
+  creator.className = "creator";
+  const playersCount = document.createElement("p");
+  playersCount.className = "playerCount";
+  const gameStatus = document.createElement("p");
+  gameStatus.className = "gameStatus";
+
+  main.appendChild(gameDiv);
+  gameDiv.appendChild(creator);
+  gameDiv.appendChild(playersCount);
+  gameDiv.appendChild(gameStatus);
+
+  creator.textContent = creatorArg;
+  playersCount.textContent = count;
+  gameStatus.textContent = status;
+}
+
+export function removeChilds(parent) {
+  while (parent.lastChild) {
+    parent.removeChild(parent.lastChild);
   }
 }

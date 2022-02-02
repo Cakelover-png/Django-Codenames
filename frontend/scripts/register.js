@@ -11,9 +11,7 @@ form.addEventListener("submit", function (event) {
 
   XHR.onload = function () {
     if (this.status == 201) {
-      // alert(jsonResponse["access"]);
       window.location = "../html/login.html";
     }
-    // console.log(this.responseText);
   };
 });

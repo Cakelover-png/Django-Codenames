@@ -1,10 +1,10 @@
 "use strict";
-import { setOrRemoveTokens, getXHR, postXHR } from "./utils.js";
+import { setOrRemoveTokens, getXHR, postXHR, AUTHheader } from "./utils.js";
 
 export function loginValidation() {
   if (localStorage.getItem("access")) {
     const XHR = getXHR("http://127.0.0.1:8000/api/accounts/userdata/", [
-      ["Authorization", "JWT " + localStorage.getItem("access")],
+      AUTHheader,
     ]);
     XHR.onload = function () {
       if (this.status === 403) {
@@ -36,5 +36,3 @@ export function loginValidation() {
     };
   }
 }
-
-function main() {}
