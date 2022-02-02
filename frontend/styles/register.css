@@ -28,10 +28,11 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 1.5em;
 }
 
 .registerForm div {
-  margin-top: 2em;
+  margin-top: 1.3em;
 }
 
 .registerForm input[type="text"],
@@ -95,4 +96,20 @@ body {
   background-color: #fff;
   color: #d90429;
   border-color: #d90429;
+}
+
+.loginNow {
+  color: rgb(189, 184, 184);
+  text-transform: capitalize;
+  margin-bottom: 1em;
+}
+
+.loginNow a {
+  text-decoration: none;
+  text-decoration: underline;
+  color: #fff;
+}
+
+.loginNow span {
+  margin-left: 10px;
 }

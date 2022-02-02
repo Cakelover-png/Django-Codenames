@@ -81,10 +81,25 @@ body {
 .loginHeader {
   font-size: xx-large;
   position: absolute;
-  top: 8%;
+  top: 6%;
   left: 50%;
   transform: translateX(-50%);
   color: #be1d15;
   text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #8a110a,
     0 0 82px #8a110a, 0 0 92px #8a110a, 0 0 102px #8a110a, 0 0 151px #8a110a;
+}
+
+.registerNow {
+  color: rgb(189, 184, 184);
+  text-transform: capitalize;
+}
+
+.registerNow a {
+  text-decoration: none;
+  text-decoration: underline;
+  color: #fff;
+}
+
+.registerNow span {
+  margin-left: 10px;
 }
