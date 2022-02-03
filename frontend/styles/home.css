@@ -5,10 +5,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #47126b;
 }
 
 body {
+  background: linear-gradient(to bottom, #a42ef3, #2a0841);
   height: 100vh;
   position: relative;
 }
@@ -27,8 +27,9 @@ body {
 
 .header h1 {
   color: rgb(245, 161, 161);
-  text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #f3a4a4,
-    0 0 82px #f3a4a4, 0 0 92px #f3a4a4, 0 0 102px #f3a4a4, 0 0 151px #f3a4a4;
+  text-shadow: 0 0 2px rgb(12, 12, 12), 0 0 5px rgb(53, 51, 51), 0 0 7px #fff,
+    0 0 10px #fff, 0 0 21px #fff, 0 0 42px #f3a4a4, 0 0 82px #f3a4a4,
+    0 0 92px #f3a4a4, 0 0 102px #f3a4a4, 0 0 151px #f3a4a4;
 }
 
 .mainEl {
@@ -56,9 +57,20 @@ body {
   text-transform: uppercase;
   text-align: center;
   font-family: "Rubik Beastly", cursive;
-  background-color: #ff5400;
   border-color: #b63f04;
-  transition: transform ease-in 0.1s, box-shadow ease-in 0.1s;
+  transition: all 0.4s ease-in-out;
+
+  background-image: linear-gradient(
+    to right,
+    #daa30e,
+    #ec0808,
+    #f0487a,
+    #ad190e
+  );
+}
+
+.loginBtn:hover {
+  box-shadow: 0px 0px 10px #8f3406, 0px 0px 20px #d34a05, 0px 0px 50px #ff5400;
 }
 
 .registerBtn {
@@ -69,9 +81,15 @@ body {
   letter-spacing: 1em;
   text-transform: uppercase;
   text-align: center;
-  background-color: #ff9e00;
+  background-image: linear-gradient(
+    to left,
+    #ecbc37,
+    #eb9544,
+    #d15278,
+    #df4b11
+  );
   border-color: #a15d03;
-  transition: box-shadow ease-in 0.1s;
+  transition: box-shadow ease-in 0.1s, transform ease 0.2s;
 }
 
 .loginDiv {
@@ -87,11 +105,6 @@ body {
   border: none;
   z-index: 1;
   margin-top: 0.7em;
-}
-
-.loginBtn:hover {
-  box-shadow: 0px 0px 10px #8f3406, 0px 0px 20px #d34a05, 0px 0px 50px #ff5400;
-  transform: translateY(-5px);
 }
 
 .registerBtn:hover {
