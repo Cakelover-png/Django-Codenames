@@ -8,15 +8,20 @@
     <title>Document</title>
   </head>
   <body>
-    <header>
-      <button class="refreshBtn">Refresh Games</button>
-      <button class="createBTN">Create Game</button>
+    <header class="header">
+      <div class="left">
+        <button class="btn refreshBtn">Refresh Games</button>
+        <button class="btn createBTN">Create Game</button>
+      </div>
+
       <div class="right">
         <span class="userName">User Name</span>
-        <button class="logoutBtn">Log out</button>
+        <button class="btn logoutBtn">Logout</button>
       </div>
     </header>
-    <main class="main"></main>
+    <main class="main">
+      <section class="gameSection"></section>
+    </main>
     <script src="../scripts/lobby.js" type="module"></script>
   </body>
 </html>

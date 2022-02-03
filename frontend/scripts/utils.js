@@ -62,7 +62,7 @@ export function postFormXHR(url, headers, data) {
 }
 
 export function createGameListTags(creatorArg, count, status) {
-  const main = document.querySelector(".main");
+  const gameSection = document.querySelector(".gameSection");
 
   const gameDiv = document.createElement("div");
   gameDiv.className = "game";
@@ -72,15 +72,41 @@ export function createGameListTags(creatorArg, count, status) {
   playersCount.className = "playerCount";
   const gameStatus = document.createElement("p");
   gameStatus.className = "gameStatus";
+  let row = document.createElement("div");
+  row.className = "row";
+  if (!document.querySelector(".row")) {
+    gameSection.appendChild(row);
+  }
 
-  main.appendChild(gameDiv);
+  row =
+    document.querySelectorAll(".row")[
+      document.querySelectorAll(".row").length - 1
+    ];
+
+  if (row.childElementCount < 3) {
+    row.appendChild(gameDiv);
+  } else if (row.childElementCount === 3) {
+    row = document.createElement("div");
+    row.className = "row";
+    gameSection.appendChild(row);
+    row.appendChild(gameDiv);
+  }
+
   gameDiv.appendChild(creator);
   gameDiv.appendChild(playersCount);
   gameDiv.appendChild(gameStatus);
 
   creator.textContent = creatorArg;
   playersCount.textContent = count;
-  gameStatus.textContent = status;
+  let str = "";
+  if (status === 0) {
+    str = "Not Started";
+  } else if (status === 1) {
+    str = "In Progress";
+  } else {
+    str = "Finished";
+  }
+  gameStatus.textContent = str;
 }
 
 export function removeChilds(parent) {

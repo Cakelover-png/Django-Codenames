@@ -67,7 +67,8 @@ function main() {
   getGames();
   const refreshBTN = document.querySelector(".refreshBtn");
   refreshBTN.addEventListener("click", function () {
-    removeChilds(document.querySelector(".main"));
+    const gameSection = document.querySelector(".gameSection");
+    removeChilds(gameSection);
     getGames();
   });
   const createBTN = document.querySelector(".createBTN");
