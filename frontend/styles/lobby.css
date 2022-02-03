@@ -129,7 +129,7 @@ body {
 .row {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   margin-top: 5%;
   height: 25%;
