@@ -18,11 +18,17 @@ class GameViewSet(mixins.CreateModelMixin,
                   mixins.RetrieveModelMixin,
                   mixins.ListModelMixin,
                   GenericViewSet):
-    queryset = Game.objects.all()
+    queryset = Game.objects.select_related('creator')
     serializer_class = SerializerFactory(create=CreateGameSerializer,
                                          retrieve=RetrieveGameSerializer,
                                          default=ListGameSerializer)
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        qs = super(GameViewSet, self).get_queryset()
+        if self.action == 'retrieve':
+            qs = qs.prefetch_related('fieldoperative__player', 'spymaster__player', 'game_cards__card')
+        return qs
 
     def get_serializer_context(self):
         context = {
