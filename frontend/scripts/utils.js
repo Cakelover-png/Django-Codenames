@@ -72,9 +72,11 @@ export function createGameListTags(creatorArg, count, status, id) {
   playersCount.className = "playerCount";
   const gameStatus = document.createElement("p");
   gameStatus.className = "gameStatus";
+
   const joinButton = document.createElement("a");
   joinButton.textContent = "Join";
   joinButton.className = "joinBtn";
+  joinButton.id = "join";
   joinButton.href = `../html/game.html?id=${id}`;
 
   let row = document.createElement("div");
