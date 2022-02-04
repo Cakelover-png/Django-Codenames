@@ -61,7 +61,7 @@ export function postFormXHR(url, headers, data) {
   }
 }
 
-export function createGameListTags(creatorArg, count, status) {
+export function createGameListTags(creatorArg, count, status, id) {
   const gameSection = document.querySelector(".gameSection");
 
   const gameDiv = document.createElement("div");
@@ -72,6 +72,11 @@ export function createGameListTags(creatorArg, count, status) {
   playersCount.className = "playerCount";
   const gameStatus = document.createElement("p");
   gameStatus.className = "gameStatus";
+  const joinButton = document.createElement("a");
+  joinButton.textContent = "Join";
+  joinButton.className = "joinBtn";
+  joinButton.href = `../html/game.html?id=${id}`;
+
   let row = document.createElement("div");
   row.className = "row";
   if (!document.querySelector(".row")) {
@@ -95,6 +100,7 @@ export function createGameListTags(creatorArg, count, status) {
   gameDiv.appendChild(creator);
   gameDiv.appendChild(playersCount);
   gameDiv.appendChild(gameStatus);
+  gameDiv.appendChild(joinButton);
 
   creator.textContent = creatorArg;
   playersCount.textContent = count;

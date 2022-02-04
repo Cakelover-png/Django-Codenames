@@ -24,14 +24,14 @@ export function loginValidation() {
               jsonResponse["access"],
               jsonResponse["refresh"]
             );
-            window.location = "../html/lobby.html";
+            window.location.href = "../html/lobby.html";
           } else {
             setOrRemoveTokens(true);
-            window.location = "../html/login.html";
+            window.location.href = "../html/login.html";
           }
         };
       } else if (this.status === 200) {
-        window.location = "../html/lobby.html";
+        window.location.href = "../html/lobby.html";
       }
     };
   }

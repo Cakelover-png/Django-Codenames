@@ -11,7 +11,7 @@ form.addEventListener("submit", function (event) {
 
   XHR.onload = function () {
     if (this.status == 201) {
-      window.location = "../html/login.html";
+      window.location.href = "../html/login.html";
     }
   };
 });

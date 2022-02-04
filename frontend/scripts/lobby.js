@@ -26,8 +26,8 @@ function logout() {
     {}
   );
   XHR.onload = function () {
+    window.location.href = "../html/index.html";
     setOrRemoveTokens(true);
-    window.location = "../html/index.html";
   };
 }
 
@@ -40,7 +40,8 @@ function getGames() {
       createGameListTags(
         game["creator"],
         game["player_count_in_lobby"],
-        game["status"]
+        game["status"],
+        game["id"]
       );
     }
   };
@@ -54,7 +55,7 @@ function createGames() {
   );
 
   XHR.onload = function () {
-    window.location = "../html/game.html?id=2";
+    window.location.href = "../html/game.html?id=2";
   };
 }
 

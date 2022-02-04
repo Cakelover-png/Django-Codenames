@@ -15,7 +15,7 @@ form.addEventListener("submit", function (event) {
       const jsonResponse = JSON.parse(this.responseText);
       // alert(jsonResponse["access"]);
       setOrRemoveTokens(false, jsonResponse["access"], jsonResponse["refresh"]);
-      window.location = "../html/lobby.html";
+      window.location.href = "../html/lobby.html";
     }
     // console.log(this.responseText);
   };
