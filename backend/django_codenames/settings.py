@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
-    'debug_toolbar'
+    'debug_toolbar',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -165,3 +166,8 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+ASGI_APPLICATION = 'django_codenames.asgi.application'
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = None
+
