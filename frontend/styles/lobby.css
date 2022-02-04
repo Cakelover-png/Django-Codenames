@@ -146,6 +146,75 @@ body {
   border-radius: 10px;
   box-shadow: 0 0 2px #10021a, 0 0 7px #520883, 0 0 18px #2a0344;
   padding: 0.8%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.gameInfo {
+  min-height: 100%;
+  color: #921212;
+  width: 60%;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  border: 1px solid #921212;
+  box-shadow: 0 0 5px #921212;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.gameInfo p {
+  padding: 10px;
+}
+
+.joinGame {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.joinGame a {
+  width: 150px;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  margin: 20px;
+  height: 50px;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+  text-decoration: none;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 2px;
+
+  border-radius: 10px;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+
+  background-image: linear-gradient(
+    to right,
+    #921212,
+    #c22f34,
+    #e14e53,
+    #f10e1a
+  );
+  box-shadow: 0 5px 15px rgba(242, 97, 102, 0.767);
+}
+
+.joinGame a:hover {
+  background-position: 100% 0;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
 }
 
 .sticky {

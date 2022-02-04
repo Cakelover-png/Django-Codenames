@@ -79,6 +79,11 @@ export function createGameListTags(creatorArg, count, status, id) {
   joinButton.id = "join";
   joinButton.href = `../html/game.html?id=${id}`;
 
+  const gameInfo = document.createElement("div");
+  gameInfo.className = "gameInfo";
+  const joinGame = document.createElement("div");
+  joinGame.className = "joinGame";
+
   let row = document.createElement("div");
   row.className = "row";
   if (!document.querySelector(".row")) {
@@ -99,13 +104,15 @@ export function createGameListTags(creatorArg, count, status, id) {
     row.appendChild(gameDiv);
   }
 
-  gameDiv.appendChild(creator);
-  gameDiv.appendChild(playersCount);
-  gameDiv.appendChild(gameStatus);
-  gameDiv.appendChild(joinButton);
+  gameDiv.appendChild(gameInfo);
+  gameDiv.appendChild(joinGame);
+  gameInfo.appendChild(creator);
+  gameInfo.appendChild(playersCount);
+  gameInfo.appendChild(gameStatus);
+  joinGame.appendChild(joinButton);
 
-  creator.textContent = creatorArg;
-  playersCount.textContent = count;
+  creator.textContent = `Creator: ${creatorArg}`;
+  playersCount.textContent = `Players: ${count}`;
   let str = "";
   if (status === 0) {
     str = "Not Started";
