@@ -71,6 +71,12 @@ class GameConsumer(RetrieveModelMixin,
         await database_sync_to_async(game.change_turn)()
         return {}, status.HTTP_200_OK
 
+    @action()
+    async def can_play(self, pk, **kwargs):
+        user: User = self.scope['user']
+        game: Game = await database_sync_to_async(self.get_object)(pk=pk)
+        return {'can_play': await self.check_if_player_can_play(game, user)}, status.HTTP_200_OK
+
     @database_sync_to_async
     def remove_user_from_game_lobby(self, game: Game):
         user: User = self.scope['user']
@@ -124,3 +130,8 @@ class GameConsumer(RetrieveModelMixin,
             game.change_turn()
             set_finished_if_winner(game, game_card_team)
         return {}, status.HTTP_200_OK
+
+    @database_sync_to_async
+    def check_if_player_can_play(self, game: Game, player: User):
+        last_turn = game.last_turn
+        return game.fieldoperative.filter(player_id=player.id, team=last_turn).exists()
