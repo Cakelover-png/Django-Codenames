@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.fields import CurrentUserDefault
 
-from game.choices import GameStatus
+from game.choices import GameStatus, TeamType
 from game.models import Game, Spymaster, FieldOperative, GameCard
 
 
@@ -63,10 +63,13 @@ class RetrieveGameSerializer(serializers.ModelSerializer):
     field_operatives = serializers.SerializerMethodField()
     spymasters = serializers.SerializerMethodField()
     game_cards = serializers.SerializerMethodField()
+    red_score = serializers.SerializerMethodField()
+    blue_score = serializers.SerializerMethodField()
 
     class Meta:
         model = Game
-        fields = ('id', 'creator', 'field_operatives', 'spymasters', 'game_cards')
+        fields = ('id', 'creator', 'field_operatives', 'spymasters',
+                  'game_cards', 'status', 'last_turn', 'red_score', 'blue_score')
 
     @staticmethod
     def get_field_operatives(obj: Game):
@@ -86,6 +89,14 @@ class RetrieveGameSerializer(serializers.ModelSerializer):
             return SpyMasterGameCardSerializer(obj.game_cards, many=True).data
         else:
             return FieldOperativeGameCardSerializer(obj.game_cards, many=True).data
+
+    @staticmethod
+    def get_red_score(obj: Game):
+        return obj.game_cards.filter(is_guessed=True, team=TeamType.RED).count()
+
+    @staticmethod
+    def get_blue_score(obj: Game):
+        return obj.game_cards.filter(is_guessed=True, team=TeamType.BLUE).count()
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
