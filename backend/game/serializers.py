@@ -70,7 +70,8 @@ class RetrieveGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ('id', 'creator', 'field_operatives', 'spymasters',
-                  'game_cards', 'status', 'last_turn', 'left_red_card_count', 'left_blue_card_count')
+                  'game_cards', 'status', 'last_turn', 'can_play',
+                  'left_red_card_count', 'left_blue_card_count')
 
     @staticmethod
     def get_field_operatives(obj: Game):
