@@ -66,10 +66,11 @@ class RetrieveGameSerializer(serializers.ModelSerializer):
     left_red_card_count = serializers.SerializerMethodField()
     left_blue_card_count = serializers.SerializerMethodField()
     can_play = serializers.SerializerMethodField()
+    is_creator = serializers.SerializerMethodField()
 
     class Meta:
         model = Game
-        fields = ('id', 'creator', 'field_operatives', 'spymasters',
+        fields = ('id', 'field_operatives', 'spymasters', 'is_creator',
                   'game_cards', 'status', 'last_turn', 'can_play',
                   'left_red_card_count', 'left_blue_card_count')
 
@@ -104,6 +105,10 @@ class RetrieveGameSerializer(serializers.ModelSerializer):
         user = self.context['scope']['user']
         last_turn = obj.last_turn
         return obj.fieldoperative.filter(player_id=user.id, team=last_turn).exists()
+
+    def get_is_creator(self, obj: Game):
+        user = self.context['scope']['user']
+        return obj.creator.id == user.id
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
