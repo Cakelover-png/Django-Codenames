@@ -1,67 +1,213 @@
 "use strict";
 
-function getData(pkArg) {
-  const socket = new WebSocket(
-    `ws://127.0.0.1:8000/ws/game/game/?access_token=${localStorage.getItem(
-      "access"
-    )}`
-  );
+import { removeChilds, AUTHheader } from "./utils.js";
+import "regenerator-runtime/runtime";
+import axios from "axios";
 
+const instance = axios.create({ baseURL: "http://localhost:8000" });
+
+const socket = new WebSocket(
+  `ws://127.0.0.1:8000/ws/game/game/?access_token=${localStorage.getItem(
+    "access"
+  )}`
+);
+
+function getData(pkArg) {
   socket.onopen = function () {
+    retrieveAction(pkArg);
+  };
+}
+
+function becomeSpyMaster(pkArg) {
+  const [redTeamSpy, blueTeamSpy] = document.querySelectorAll(".spyBtn");
+  redTeamSpy.addEventListener("click", function () {
     socket.send(
       JSON.stringify({
-        action: "retrieve",
+        action: "become_spymaster",
         request_id: new Date().getTime(),
         pk: pkArg,
+        team: 0,
       })
     );
-  };
+    retrieveAction(pkArg);
+  });
 
+  blueTeamSpy.addEventListener("click", function () {
+    socket.send(
+      JSON.stringify({
+        action: "become_spymaster",
+        request_id: new Date().getTime(),
+        pk: pkArg,
+        team: 1,
+      })
+    );
+    retrieveAction(pkArg);
+  });
+}
+
+function becomeOperative(pkArg) {
+  const [redTeamCop, blueTeamCop] = document.querySelectorAll(".opBtn");
+  redTeamCop.addEventListener("click", function () {
+    socket.send(
+      JSON.stringify({
+        action: "become_field_operative",
+        request_id: new Date().getTime(),
+        pk: pkArg,
+        team: 0,
+      })
+    );
+    retrieveAction(pkArg);
+  });
+
+  blueTeamCop.addEventListener("click", function () {
+    socket.send(
+      JSON.stringify({
+        action: "become_field_operative",
+        request_id: new Date().getTime(),
+        pk: pkArg,
+        team: 1,
+      })
+    );
+    retrieveAction(pkArg);
+  });
+}
+
+function retrieveAction(pkArg) {
+  console.log("set");
+  socket.send(
+    JSON.stringify({
+      action: "retrieve",
+      request_id: new Date().getTime(),
+      pk: pkArg,
+    })
+  );
+}
+
+function socketManager(pkArg) {
   socket.onmessage = function (event) {
     const response = JSON.parse(event.data);
-    const spymaster1 = document.querySelector(".spymaster1");
-    const spymaster2 = document.querySelector(".spymaster2");
-    const cards = document.querySelectorAll(".card");
-    const cardData = response.data.game_cards;
-    const [operativeLabel1, operativeLabel2] =
-      document.querySelectorAll(".operatives");
+    switch (response.action) {
+      case "retrieve":
+        const spymaster1 = document.querySelector(".spymaster1");
+        const spymaster2 = document.querySelector(".spymaster2");
+        const [operativeLabel1, operativeLabel2] =
+          document.querySelectorAll(".operatives");
+        const startBtn = document.querySelector(".startGameBtn");
 
-    console.log(operativeLabel1);
+        removeChilds(operativeLabel1);
+        removeChilds(operativeLabel2);
 
-    console.log(response.data);
-    console.log(response.data.spymasters);
+        spymaster1.textContent = "-";
+        spymaster2.textContent = "-";
 
-    for (const spy of response.data.spymasters) {
-      spy.team === 0
-        ? (spymaster1.textContent = spy.player)
-        : (spymaster2.textContent = spy.player);
-    }
+        for (const spy of response.data.spymasters) {
+          spy.team === 0
+            ? (spymaster1.textContent = spy.player)
+            : (spymaster2.textContent = spy.player);
+        }
 
-    for (let i = 0; i < cards.length; ++i) {
-      cards[i].textContent = cardData[i].name;
-      if (cardData[i].team === 0) {
-        cards[i].classList.add("red");
-      } else if (cardData[i].team === 1) {
-        cards[i].classList.add("blue");
-      }
-      if (cardData[i].is_assassin) {
-        cards[i].classList.add("killer");
-      }
-      cards[i].id = cardData[i].id;
-    }
+        for (const op of response.data.field_operatives) {
+          const operative = document.createElement("p");
+          operative.textContent = op.player;
+          operative.id = op.id;
+          if (op.team === 0) {
+            operative.className = "operatives1";
+            operativeLabel1.appendChild(operative);
+          } else if (op.team === 1) {
+            operative.className = "operatives2";
+            operativeLabel2.appendChild(operative);
+          }
+        }
 
-    for (const op of response.data.field_operatives) {
-      const operative = document.createElement("p");
-      operative.textContent = op.player;
-      operative.id = op.id;
-      if (op.team === 0) {
-        console.log(op.team);
-        operative.className = "operatives1";
-        operativeLabel1.appendChild(operative);
-      } else if (op.team === 1) {
-        operative.className = "operatives2";
-        operativeLabel2.appendChild(operative);
-      }
+        if (response.data.status >= 1) {
+          const cards = document.querySelectorAll(".card");
+          const cardData = response.data.game_cards;
+          const endBtn = document.querySelector(".endTurnBtn");
+
+          startBtn.classList.add("hidden");
+          for (const btn of [
+            ...document.querySelectorAll(".spyBtn"),
+            ...document.querySelectorAll(".opBtn"),
+          ]) {
+            btn.disabled = true;
+          }
+
+          for (let i = 0; i < cards.length; ++i) {
+            cards[i].textContent = cardData[i].name;
+            if (cardData[i].team === 0) {
+              cards[i].classList.add("red");
+            } else if (cardData[i].team === 1) {
+              cards[i].classList.add("blue");
+            }
+            if (cardData[i].is_assassin) {
+              cards[i].classList.add("killer");
+            }
+            cards[i].id = cardData[i].id;
+            if (cardData[i].is_guessed) {
+              cards[i].classList.add("bright");
+            }
+          }
+
+          for (const card of cards) {
+            card.addEventListener("click", function () {
+              socket.send(
+                JSON.stringify({
+                  action: "play",
+                  request_id: new Date().getTime(),
+                  pk: pkArg,
+                  game_card_pk: card.id,
+                })
+              );
+              retrieveAction(pkArg);
+            });
+          }
+          if (response.data.status === 1) {
+            endBtn.classList.remove("hidden");
+
+            endBtn.addEventListener("click", function () {
+              socket.send(
+                JSON.stringify({
+                  action: "end_turn",
+                  request_id: new Date().getTime(),
+                  pk: pkArg,
+                })
+              );
+              retrieveAction(pkArg);
+            });
+
+            if (!response.data.can_play) {
+              console.log(2);
+              for (const card of cards) {
+                card.classList.add("disabled");
+              }
+              endBtn.classList.add("disabled");
+            } else {
+              for (const card of cards) {
+                card.classList.remove("disabled");
+              }
+              endBtn.classList.remove("disabled");
+            }
+          } else if (response.status === 2) {
+            endBtn.classList.add("hidden");
+            for (const card of cards) {
+              card.classList.add("disabled");
+            }
+          }
+        } else {
+          if (response.data.is_creator) {
+            startBtn.classList.remove("hidden");
+            startBtn.addEventListener("click", function () {
+              socket.send(
+                JSON.stringify({
+                  action: "start_game",
+                  request_id: new Date().getTime(),
+                  pk: pkArg,
+                })
+              );
+              retrieveAction(pkArg);
+            });
+          }
+        }
     }
   };
 
@@ -83,8 +229,11 @@ function getData(pkArg) {
 }
 
 function main() {
-  const pk = window.location.href.split("=");
-  getData(pk[1]);
+  const pk = window.location.href.split("=")[1];
+  getData(pk);
+  becomeOperative(pk);
+  becomeSpyMaster(pk);
+  socketManager(pk);
 }
 
 main();

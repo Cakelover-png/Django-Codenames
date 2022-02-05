@@ -31,6 +31,9 @@ body {
   text-align: center;
   margin-bottom: 20px;
   margin-top: 0;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .end {
@@ -51,6 +54,7 @@ body {
   letter-spacing: 2px;
   font-size: 16px;
   font-weight: 800;
+  opacity: 0.6;
 }
 
 .card:last-child {
@@ -59,6 +63,10 @@ body {
 
 .card:hover {
   transform: scale(1.04);
+}
+
+.bright {
+  opacity: 1;
 }
 
 .endTurnBtn {
@@ -85,6 +93,49 @@ body {
   box-shadow: 0 5px 15px rgba(242, 97, 102, 0.658);
 
   border-radius: 15px;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.disabled {
+  pointer-events: none;
+}
+
+.startGameBtn {
+  width: 20%;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  height: 30px;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+  text-transform: capitalize;
+  text-shadow: 0px 0px 4px rgb(7, 7, 7), 0px 0px 7px #fff, 0px 0px 20px #fff;
+  letter-spacing: 1px;
+
+  border-radius: 10px;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+
+  background-image: linear-gradient(
+    to right,
+    #921212,
+    #c22f34,
+    #e14e53,
+    #f10e1a
+  );
+  box-shadow: 0 5px 15px rgba(242, 97, 102, 0.658);
+}
+
+.startGameBtn:hover {
+  background-position: 100% 0;
   -o-transition: all 0.4s ease-in-out;
   -webkit-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;

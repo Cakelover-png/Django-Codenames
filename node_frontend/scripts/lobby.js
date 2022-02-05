@@ -5,7 +5,6 @@ import {
   AUTHheader,
   createGameListTags,
   removeChilds,
-  // getAUTHheader,
 } from "./utils.js";
 
 import "regenerator-runtime/runtime";
