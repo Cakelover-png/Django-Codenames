@@ -1,16 +1,31 @@
 "use strict";
-export const AUTHheader = [
-  "Authorization",
-  "JWT " + localStorage.getItem("access"),
-];
-export function objToString(data) {
-  let str = "";
-  for (let [key, value] of Object.entries(data)) {
-    str += `${key}=${value}&`;
-  }
-  console.log(str.substring(0, str.length - 1));
-  return str.substring(0, str.length - 1);
-}
+// import "regenerator-runtime/runtime";
+// import axios from "axios";
+
+export const AUTHheader = "JWT " + localStorage.getItem("access");
+// const instance = axios.create({ baseURL: "http://localhost:8000" });
+// export async function getAUTHheader() {
+//   const accessToken = "JWT " + localStorage.getItem("access");
+//   try {
+//     await instance.get("/api/accounts/userdata/", {
+//       headers: {
+//         Authorization: accessToken,
+//       },
+//     });
+//     return accessToken;
+//   } catch (error) {
+//     console.error(error);
+//     try {
+//       const response = await instance.post("/api/accounts/token/refresh/", {
+//         refresh: localStorage.getItem("refresh"),
+//       });
+//       setOrRemoveTokens(false, response.data.access, response.data.refresh);
+//       return `JWT ${response.data.access}`;
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   }
+// }
 
 export function setOrRemoveTokens(remove, access = null, refresh = null) {
   if (!remove) {
@@ -23,41 +38,6 @@ export function setOrRemoveTokens(remove, access = null, refresh = null) {
   } else {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
-  }
-}
-
-export function getXHR(url, headers) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("GET", url, true);
-
-  for (const header of headers) {
-    xhr.setRequestHeader(header[0], header[1]);
-  }
-
-  xhr.send(null);
-  return xhr;
-}
-
-export function postXHR(url, headers, data) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-
-  //Send the proper header information along with the request
-  for (const header of headers) {
-    xhr.setRequestHeader(header[0], header[1]);
-  }
-
-  xhr.send(objToString(data));
-  return xhr;
-}
-
-export function postFormXHR(url, headers, data) {
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-
-  //Send the proper header information along with the request
-  for (const header of headers) {
-    xhr.setRequestHeader(header[0], header[1]);
   }
 }
 
@@ -77,7 +57,7 @@ export function createGameListTags(creatorArg, count, status, id) {
   joinButton.textContent = "Join";
   joinButton.className = "joinBtn";
   joinButton.id = "join";
-  joinButton.href = `../html/game.html?id=${id}`;
+  joinButton.href = `./game.html?id=${id}`;
 
   const gameInfo = document.createElement("div");
   gameInfo.className = "gameInfo";

@@ -1,0 +1,145 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(to bottom, #a349df, #3b095c);
+  position: relative;
+  font-family: "Roboto", sans-serif;
+}
+
+.main {
+  height: auto;
+  width: 100%;
+  padding: 15px 0px;
+  position: absolute;
+  top: 2%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.row {
+  margin-top: 27px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.end {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.card {
+  width: 170px;
+  height: 80px;
+  border-radius: 5px;
+  margin-right: 23px;
+  background-color: #f3c3bb;
+  outline: 10px solid #fae1dd;
+  cursor: pointer;
+  opacity: 0.9;
+  border: none;
+  letter-spacing: 2px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.card:last-child {
+  margin-right: 0;
+}
+
+.card:hover {
+  transform: scale(1.04);
+}
+
+.endTurnBtn {
+  width: 200px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 2px;
+  text-transform: capitalize;
+  cursor: pointer;
+  margin-top: 25px;
+  height: 55px;
+  text-align: center;
+  border: none;
+  background-size: 300% 100%;
+
+  background-image: linear-gradient(
+    to right,
+    #921212,
+    #c22f34,
+    #e14e53,
+    #f10e1a
+  );
+  box-shadow: 0 5px 15px rgba(242, 97, 102, 0.658);
+
+  border-radius: 15px;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+
+.endTurnBtn:hover {
+  background-position: 100% 0;
+  -o-transition: all 0.4s ease-in-out;
+  -webkit-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+
+.red {
+  color: #fff;
+  background-color: #ba181b;
+  outline-color: #d47273;
+}
+
+.blue {
+  color: #fff;
+  background-color: #0466c8;
+  outline-color: #7374b9;
+}
+
+.killer {
+  color: #fff;
+  background-color: #252422;
+  outline-color: #3a3938;
+}
+
+.info {
+  height: auto;
+  width: 200px;
+  padding: 20px 10px;
+  border-radius: 10px;
+}
+
+.team1Info {
+  background-color: #ad0718;
+}
+
+.operatives,
+.spy {
+  color: #fff;
+  font-size: medium;
+  font-weight: 300;
+  opacity: 0.8;
+}
+
+.spymaster1,
+.spymaster2,
+.operatives1,
+.operatives2 {
+  color: #fff;
+  font-size: large;
+  font-weight: 400;
+  margin-left: 20px;
+}
