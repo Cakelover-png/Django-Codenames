@@ -59,7 +59,6 @@ class FieldOperativeGameCardSerializer(SpyMasterGameCardSerializer):
 
 
 class RetrieveGameSerializer(serializers.ModelSerializer):
-    creator = serializers.SerializerMethodField()
     field_operatives = serializers.SerializerMethodField()
     spymasters = serializers.SerializerMethodField()
     game_cards = serializers.SerializerMethodField()
@@ -81,10 +80,6 @@ class RetrieveGameSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_spymasters(obj: Game):
         return SpymasterSerializer(obj.spymaster, many=True).data
-
-    @staticmethod
-    def get_creator(obj: Game):
-        return obj.creator.username
 
     def get_game_cards(self, obj: Game):
         user = self.context['scope']['user']
