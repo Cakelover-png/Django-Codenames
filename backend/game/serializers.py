@@ -65,6 +65,7 @@ class RetrieveGameSerializer(serializers.ModelSerializer):
     game_cards = serializers.SerializerMethodField()
     left_red_card_count = serializers.SerializerMethodField()
     left_blue_card_count = serializers.SerializerMethodField()
+    can_play = serializers.SerializerMethodField()
 
     class Meta:
         model = Game
@@ -97,6 +98,11 @@ class RetrieveGameSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_left_blue_card_count(obj: Game):
         return 8 - obj.game_cards.filter(is_guessed=True, team=TeamType.BLUE).count()
+
+    def get_can_play(self, obj: Game):
+        user = self.context['scope']['user']
+        last_turn = obj.last_turn
+        return obj.fieldoperative.filter(player_id=user.id, team=last_turn).exists()
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
