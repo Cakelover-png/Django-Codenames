@@ -63,13 +63,13 @@ class RetrieveGameSerializer(serializers.ModelSerializer):
     field_operatives = serializers.SerializerMethodField()
     spymasters = serializers.SerializerMethodField()
     game_cards = serializers.SerializerMethodField()
-    red_score = serializers.SerializerMethodField()
-    blue_score = serializers.SerializerMethodField()
+    left_red_card_count = serializers.SerializerMethodField()
+    left_blue_card_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Game
         fields = ('id', 'creator', 'field_operatives', 'spymasters',
-                  'game_cards', 'status', 'last_turn', 'red_score', 'blue_score')
+                  'game_cards', 'status', 'last_turn', 'left_red_card_count', 'left_blue_card_count')
 
     @staticmethod
     def get_field_operatives(obj: Game):
@@ -91,12 +91,12 @@ class RetrieveGameSerializer(serializers.ModelSerializer):
             return FieldOperativeGameCardSerializer(obj.game_cards, many=True).data
 
     @staticmethod
-    def get_red_score(obj: Game):
-        return obj.game_cards.filter(is_guessed=True, team=TeamType.RED).count()
+    def get_left_red_card_count(obj: Game):
+        return 9 - obj.game_cards.filter(is_guessed=True, team=TeamType.RED).count()
 
     @staticmethod
-    def get_blue_score(obj: Game):
-        return obj.game_cards.filter(is_guessed=True, team=TeamType.BLUE).count()
+    def get_left_blue_card_count(obj: Game):
+        return 8 - obj.game_cards.filter(is_guessed=True, team=TeamType.BLUE).count()
 
 
 class CreateGameSerializer(serializers.ModelSerializer):
