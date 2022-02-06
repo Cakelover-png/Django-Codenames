@@ -1,15 +1,11 @@
 "use strict";
 
-import { removeChilds, AUTHheader } from "./utils.js";
-import "regenerator-runtime/runtime";
-import axios from "axios";
-
-const instance = axios.create({ baseURL: "http://localhost:8000" });
+import { removeChilds } from "./utils.js";
 
 const socket = new WebSocket(
   `ws://127.0.0.1:8000/ws/game/game/?access_token=${localStorage.getItem(
     "access"
-  )}`
+  )}&pk=${window.location.href.split("=")[1]}`
 );
 
 function getData(pkArg) {
@@ -29,7 +25,6 @@ function becomeSpyMaster(pkArg) {
         team: 0,
       })
     );
-    retrieveAction(pkArg);
   });
 
   blueTeamSpy.addEventListener("click", function () {
@@ -41,7 +36,6 @@ function becomeSpyMaster(pkArg) {
         team: 1,
       })
     );
-    retrieveAction(pkArg);
   });
 }
 
@@ -56,7 +50,6 @@ function becomeOperative(pkArg) {
         team: 0,
       })
     );
-    retrieveAction(pkArg);
   });
 
   blueTeamCop.addEventListener("click", function () {
@@ -68,7 +61,6 @@ function becomeOperative(pkArg) {
         team: 1,
       })
     );
-    retrieveAction(pkArg);
   });
 }
 
@@ -86,128 +78,123 @@ function retrieveAction(pkArg) {
 function socketManager(pkArg) {
   socket.onmessage = function (event) {
     const response = JSON.parse(event.data);
-    switch (response.action) {
-      case "retrieve":
-        const spymaster1 = document.querySelector(".spymaster1");
-        const spymaster2 = document.querySelector(".spymaster2");
-        const [operativeLabel1, operativeLabel2] =
-          document.querySelectorAll(".operatives");
-        const startBtn = document.querySelector(".startGameBtn");
+    console.log(response)
+    const spymaster1 = document.querySelector(".spymaster1");
+    const spymaster2 = document.querySelector(".spymaster2");
+    const [operativeLabel1, operativeLabel2] =
+      document.querySelectorAll(".operatives");
+    const startBtn = document.querySelector(".startGameBtn");
 
-        removeChilds(operativeLabel1);
-        removeChilds(operativeLabel2);
+    removeChilds(operativeLabel1);
+    removeChilds(operativeLabel2);
 
-        spymaster1.textContent = "-";
-        spymaster2.textContent = "-";
+    spymaster1.textContent = "-";
+    spymaster2.textContent = "-";
 
-        for (const spy of response.data.spymasters) {
-          spy.team === 0
-            ? (spymaster1.textContent = spy.player)
-            : (spymaster2.textContent = spy.player);
+    for (const spy of response.data.spymasters) {
+      spy.team === 0
+        ? (spymaster1.textContent = spy.player)
+        : (spymaster2.textContent = spy.player);
+    }
+
+    for (const op of response.data.field_operatives) {
+      const operative = document.createElement("p");
+      operative.textContent = op.player;
+      operative.id = op.id;
+      if (op.team === 0) {
+        operative.className = "operatives1";
+        operativeLabel1.appendChild(operative);
+      } else if (op.team === 1) {
+        operative.className = "operatives2";
+        operativeLabel2.appendChild(operative);
+      }
+    }
+
+    if (response.data.status >= 1) {
+      const cards = document.querySelectorAll(".card");
+      const cardData = response.data.game_cards;
+      const endBtn = document.querySelector(".endTurnBtn");
+
+      startBtn.classList.add("hidden");
+      for (const btn of [
+        ...document.querySelectorAll(".spyBtn"),
+        ...document.querySelectorAll(".opBtn"),
+      ]) {
+        btn.disabled = true;
+      }
+
+      for (let i = 0; i < cards.length; ++i) {
+        cards[i].textContent = cardData[i].name;
+        if (cardData[i].team === 0) {
+          cards[i].classList.add("red");
+        } else if (cardData[i].team === 1) {
+          cards[i].classList.add("blue");
         }
-
-        for (const op of response.data.field_operatives) {
-          const operative = document.createElement("p");
-          operative.textContent = op.player;
-          operative.id = op.id;
-          if (op.team === 0) {
-            operative.className = "operatives1";
-            operativeLabel1.appendChild(operative);
-          } else if (op.team === 1) {
-            operative.className = "operatives2";
-            operativeLabel2.appendChild(operative);
-          }
+        if (cardData[i].is_assassin) {
+          cards[i].classList.add("killer");
         }
+        cards[i].id = cardData[i].id;
+        if (cardData[i].is_guessed) {
+          cards[i].classList.add("bright");
+        }
+      }
 
-        if (response.data.status >= 1) {
-          const cards = document.querySelectorAll(".card");
-          const cardData = response.data.game_cards;
-          const endBtn = document.querySelector(".endTurnBtn");
+      for (const card of cards) {
+        card.addEventListener("click", function () {
+          socket.send(
+            JSON.stringify({
+              action: "play",
+              request_id: new Date().getTime(),
+              pk: pkArg,
+              game_card_pk: card.id,
+            })
+          );
+        });
+      }
+      if (response.data.status === 1) {
+        endBtn.classList.remove("hidden");
 
-          startBtn.classList.add("hidden");
-          for (const btn of [
-            ...document.querySelectorAll(".spyBtn"),
-            ...document.querySelectorAll(".opBtn"),
-          ]) {
-            btn.disabled = true;
-          }
+        endBtn.addEventListener("click", function () {
+          socket.send(
+            JSON.stringify({
+              action: "end_turn",
+              request_id: new Date().getTime(),
+              pk: pkArg,
+            })
+          );
+        });
 
-          for (let i = 0; i < cards.length; ++i) {
-            cards[i].textContent = cardData[i].name;
-            if (cardData[i].team === 0) {
-              cards[i].classList.add("red");
-            } else if (cardData[i].team === 1) {
-              cards[i].classList.add("blue");
-            }
-            if (cardData[i].is_assassin) {
-              cards[i].classList.add("killer");
-            }
-            cards[i].id = cardData[i].id;
-            if (cardData[i].is_guessed) {
-              cards[i].classList.add("bright");
-            }
-          }
-
+        if (!response.data.can_play) {
+          console.log(2);
           for (const card of cards) {
-            card.addEventListener("click", function () {
-              socket.send(
-                JSON.stringify({
-                  action: "play",
-                  request_id: new Date().getTime(),
-                  pk: pkArg,
-                  game_card_pk: card.id,
-                })
-              );
-              retrieveAction(pkArg);
-            });
+            card.classList.add("disabled");
           }
-          if (response.data.status === 1) {
-            endBtn.classList.remove("hidden");
-
-            endBtn.addEventListener("click", function () {
-              socket.send(
-                JSON.stringify({
-                  action: "end_turn",
-                  request_id: new Date().getTime(),
-                  pk: pkArg,
-                })
-              );
-              retrieveAction(pkArg);
-            });
-
-            if (!response.data.can_play) {
-              console.log(2);
-              for (const card of cards) {
-                card.classList.add("disabled");
-              }
-              endBtn.classList.add("disabled");
-            } else {
-              for (const card of cards) {
-                card.classList.remove("disabled");
-              }
-              endBtn.classList.remove("disabled");
-            }
-          } else if (response.status === 2) {
-            endBtn.classList.add("hidden");
-            for (const card of cards) {
-              card.classList.add("disabled");
-            }
-          }
+          endBtn.classList.add("disabled");
         } else {
-          if (response.data.is_creator) {
-            startBtn.classList.remove("hidden");
-            startBtn.addEventListener("click", function () {
-              socket.send(
-                JSON.stringify({
-                  action: "start_game",
-                  request_id: new Date().getTime(),
-                  pk: pkArg,
-                })
-              );
-              retrieveAction(pkArg);
-            });
+          for (const card of cards) {
+            card.classList.remove("disabled");
           }
+          endBtn.classList.remove("disabled");
         }
+      } else if (response.status === 2) {
+        endBtn.classList.add("hidden");
+        for (const card of cards) {
+          card.classList.add("disabled");
+        }
+      }
+    } else {
+      if (response.data.is_creator) {
+        startBtn.classList.remove("hidden");
+        startBtn.addEventListener("click", function () {
+          socket.send(
+            JSON.stringify({
+              action: "start_game",
+              request_id: new Date().getTime(),
+              pk: pkArg,
+            })
+          );
+        });
+      }
     }
   };
 
@@ -230,7 +217,7 @@ function socketManager(pkArg) {
 
 function main() {
   const pk = window.location.href.split("=")[1];
-  getData(pk);
+  getData(pk)
   becomeOperative(pk);
   becomeSpyMaster(pk);
   socketManager(pk);

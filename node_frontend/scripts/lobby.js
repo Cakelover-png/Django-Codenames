@@ -90,7 +90,7 @@ function joinButton() {
       const socket = new WebSocket(
         `ws://127.0.0.1:8000/ws/game/game/?access_token=${
           AUTHheader.split(" ")[1]
-        }`
+        }&pk=${pk[1]}`
       );
       socket.onopen = function () {
         socket.send(

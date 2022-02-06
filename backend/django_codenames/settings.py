@@ -173,3 +173,8 @@ ASGI_APPLICATION = 'django_codenames.asgi.application'
 
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None
 
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}

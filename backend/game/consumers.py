@@ -1,3 +1,4 @@
+import json
 import random
 
 from channels.db import database_sync_to_async
@@ -6,6 +7,7 @@ from django.utils.translation import gettext_lazy as lz
 from djangochannelsrestframework.decorators import action
 from djangochannelsrestframework.generics import GenericAsyncAPIConsumer
 from djangochannelsrestframework.mixins import RetrieveModelMixin
+from djangochannelsrestframework.observer import model_observer
 from djangochannelsrestframework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
@@ -24,16 +26,33 @@ class GameConsumer(RetrieveModelMixin,
     serializer_class = RetrieveGameSerializer
     permission_classes = [IsAuthenticated]
 
+    async def connect(self):
+        self.group_name = 'game_' + str(
+            (dict((x.split('=') for x in self.scope['query_string'].decode().split("&")))).get('pk'))
+        await self.channel_layer.group_add(
+            self.group_name,
+            self.channel_name
+        )
+        await self.accept()
+
+    async def disconnect(self, code):
+        await self.channel_layer.group_discard(
+            self.group_name,
+            self.channel_name
+        )
+
     @action()
     async def join_game(self, pk, **kwargs):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.add_user_to_game_lobby(game)
+        await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
 
     @action()
     async def leave_game(self, pk, **kwargs):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.remove_user_from_game_lobby(game)
+        await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
 
     @action()
@@ -42,6 +61,7 @@ class GameConsumer(RetrieveModelMixin,
         player = self.scope['user']
         await self.delete_spymaster_and_field_operative(game, player)
         await database_sync_to_async(Spymaster.objects.create)(game_id=game.id, player_id=player.id, team=team)
+        await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
 
     @action()
@@ -50,6 +70,7 @@ class GameConsumer(RetrieveModelMixin,
         player = self.scope['user']
         await self.delete_spymaster_and_field_operative(game, player)
         await database_sync_to_async(FieldOperative.objects.create)(game_id=game.id, player_id=player.id, team=team)
+        await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
 
     @action()
@@ -57,19 +78,38 @@ class GameConsumer(RetrieveModelMixin,
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.set_status_and_turn(game)
         await self.shuffle_and_create_game_cards(game)
+        await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
 
     @action()
     async def play(self, pk, game_card_pk, **kwargs):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.check_and_modify_game_state(game, game_card_pk)
+        await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
 
     @action()
     async def end_turn(self, pk, **kwargs):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await database_sync_to_async(game.change_turn)()
+        await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
+
+    async def notify_users_about_game(self, game):
+        await self.channel_layer.group_send(
+            self.group_name,
+            {
+                'type': 'update_game',
+                'data': await self.get_game_data(game)
+            }
+        )
+
+    async def update_game(self, event: dict):
+        await self.send(text_data=json.dumps({'data': event['data']}))
+
+    @database_sync_to_async
+    def get_game_data(self, game: Game):
+        return RetrieveGameSerializer(game, context=self.get_serializer_context()).data
 
     @database_sync_to_async
     def remove_user_from_game_lobby(self, game: Game):
