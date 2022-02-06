@@ -92,6 +92,11 @@ class GameConsumer(RetrieveModelMixin,
     async def end_turn(self, pk, **kwargs):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await database_sync_to_async(game.change_turn)()
+        return {}, status.HTTP_200_OK
+
+    @action()
+    async def notify_users(self, pk, **kwargs):
+        game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
 
