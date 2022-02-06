@@ -104,7 +104,7 @@ class GameConsumer(RetrieveModelMixin,
         )
 
     async def update_game(self, event: dict):
-        await self.send(text_data=json.dumps({'data': event['data']}))
+        await self.send(text_data=json.dumps({'data': event['data'], 'action': 'notify_users'}))
 
     @database_sync_to_async
     def get_game_data(self, game: Game):
