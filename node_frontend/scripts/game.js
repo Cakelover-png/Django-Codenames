@@ -14,16 +14,6 @@ function getData(pkArg) {
   };
 }
 
-function notifyUsers(pkArg) {
-  socket.send(
-    JSON.stringify({
-      action: "notify_users",
-      request_id: new Date().getTime(),
-      pk: pkArg,
-    })
-  );
-}
-
 function becomeSpyMaster(pkArg) {
   const [redTeamSpy, blueTeamSpy] = document.querySelectorAll(".spyBtn");
   redTeamSpy.addEventListener("click", function () {
@@ -35,7 +25,6 @@ function becomeSpyMaster(pkArg) {
         team: 0,
       })
     );
-    notifyUsers(pkArg);
   });
 
   blueTeamSpy.addEventListener("click", function () {
@@ -47,7 +36,6 @@ function becomeSpyMaster(pkArg) {
         team: 1,
       })
     );
-    notifyUsers(pkArg);
   });
 }
 
@@ -62,7 +50,6 @@ function becomeOperative(pkArg) {
         team: 0,
       })
     );
-    notifyUsers(pkArg);
   });
 
   blueTeamCop.addEventListener("click", function () {
@@ -74,12 +61,10 @@ function becomeOperative(pkArg) {
         team: 1,
       })
     );
-    notifyUsers(pkArg);
   });
 }
 
 function retrieveAction(pkArg) {
-  console.log("set");
   socket.send(
     JSON.stringify({
       action: "retrieve",
@@ -102,7 +87,6 @@ function AddCardListener(pkArg) {
             game_card_pk: card.id,
           })
         );
-        notifyUsers(pkArg);
       });
     }
   }
@@ -111,9 +95,6 @@ function AddCardListener(pkArg) {
 function socketManager(pkArg) {
   socket.onmessage = function (event) {
     const response = JSON.parse(event.data);
-    console.log(response);
-    console.log(response.data);
-    console.log(response.action);
     if (response.action === "notify_users") {
       retrieveAction(pkArg);
     } else if (response.action === "retrieve") {
@@ -195,7 +176,6 @@ function socketManager(pkArg) {
             btn.classList.add("none");
           }
           if (response.data.last_turn === 1) {
-            console.log("s");
             info2.classList.add("brightDiv");
             info1.classList.remove("brightDiv");
           } else {
@@ -211,7 +191,6 @@ function socketManager(pkArg) {
                   pk: pkArg,
                 })
               );
-              notifyUsers(pkArg);
             });
           }
 
@@ -256,11 +235,8 @@ function socketManager(pkArg) {
           const winnerSelected = document.querySelectorAll(".winner");
 
           if (winnerSelected.length === 1) {
-            console.log("delete");
             parent.removeChild(winnerSelected[0]);
           }
-
-          console.log("add");
           document.querySelector(".header").appendChild(winner);
         }
       } else {
@@ -276,7 +252,6 @@ function socketManager(pkArg) {
                   pk: pkArg,
                 })
               );
-              notifyUsers(pkArg);
             });
           }
         }

@@ -15,7 +15,6 @@ async function registerUser() {
         "Content-Type": "application/x-www-form-urlencoded",
       }
     );
-    console.log(response);
     window.location.href = `http://${locationHost}:1234/login.html`;
     setOrRemoveTokens(true);
   } catch (error) {
