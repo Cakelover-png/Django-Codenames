@@ -145,22 +145,23 @@ class GameConsumer(RetrieveModelMixin,
 
     @database_sync_to_async
     def check_and_modify_game_state(self, game: Game, game_card_pk: int):
-        game_card = game.game_cards.filter(id=game_card_pk).first()
-        if not game_card:
-            raise ValidationError({'detail': lz('Wrong game card pk for the given game')})
-        game_card_team = game_card.team
-        if game_card.is_assassin:
-            game_card.set_guessed()
-            game.change_turn()
-            game.set_status_finished()
-        elif game_card_team is None:
-            game_card.set_guessed()
-            game.change_turn()
-        elif game_card_team == game.last_turn:
-            game_card.set_guessed()
-            set_finished_if_winner(game, game_card_team)
-        else:
-            game_card.set_guessed()
-            game.change_turn()
-            set_finished_if_winner(game, game_card_team)
-        return {}, status.HTTP_200_OK
+        if game.status == GameStatus.STARTED:
+            game_card = game.game_cards.filter(id=game_card_pk).first()
+            if not game_card:
+                raise ValidationError({'detail': lz('Wrong game card pk for the given game')})
+            game_card_team = game_card.team
+            if game_card.is_assassin:
+                game_card.set_guessed()
+                game.change_turn()
+                game.set_status_finished()
+            elif game_card_team is None:
+                game_card.set_guessed()
+                game.change_turn()
+            elif game_card_team == game.last_turn:
+                game_card.set_guessed()
+                set_finished_if_winner(game, game_card_team)
+            else:
+                game_card.set_guessed()
+                game.change_turn()
+                set_finished_if_winner(game, game_card_team)
+            return {}, status.HTTP_200_OK
