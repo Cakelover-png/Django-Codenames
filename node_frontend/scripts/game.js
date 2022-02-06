@@ -1,6 +1,6 @@
 "use strict";
 
-import { removeChilds, locationHost } from "./utils.js";
+import { removeChilds, locationHost, checkForEventlistener } from "./utils.js";
 
 const socket = new WebSocket(
   `ws://${locationHost}:8000/ws/game/game/?access_token=${localStorage.getItem(
@@ -89,6 +89,25 @@ function retrieveAction(pkArg) {
   );
 }
 
+function AddCardListener(pkArg) {
+  const cards = document.querySelectorAll(".card");
+  if (checkForEventlistener(cards[0])) {
+    for (const card of cards) {
+      card.addEventListener("click", function () {
+        socket.send(
+          JSON.stringify({
+            action: "play",
+            request_id: new Date().getTime(),
+            pk: pkArg,
+            game_card_pk: card.id,
+          })
+        );
+        notifyUsers(pkArg);
+      });
+    }
+  }
+}
+
 function socketManager(pkArg) {
   socket.onmessage = function (event) {
     const response = JSON.parse(event.data);
@@ -163,20 +182,7 @@ function socketManager(pkArg) {
             cards[i].classList.add("disabled");
           }
         }
-
-        for (const card of cards) {
-          card.addEventListener("click", function () {
-            socket.send(
-              JSON.stringify({
-                action: "play",
-                request_id: new Date().getTime(),
-                pk: pkArg,
-                game_card_pk: card.id,
-              })
-            );
-            notifyUsers(pkArg);
-          });
-        }
+        AddCardListener(pkArg);
         if (response.data.status === 1) {
           endBtn.classList.remove("hidden");
           const [info1, info2] = document.querySelectorAll(".info");
@@ -196,16 +202,18 @@ function socketManager(pkArg) {
             info2.classList.remove("brightDiv");
             info1.classList.add("brightDiv");
           }
-          endBtn.addEventListener("click", function () {
-            socket.send(
-              JSON.stringify({
-                action: "end_turn",
-                request_id: new Date().getTime(),
-                pk: pkArg,
-              })
-            );
-            notifyUsers(pkArg);
-          });
+          if (checkForEventlistener(endBtn)) {
+            endBtn.addEventListener("click", function () {
+              socket.send(
+                JSON.stringify({
+                  action: "end_turn",
+                  request_id: new Date().getTime(),
+                  pk: pkArg,
+                })
+              );
+              notifyUsers(pkArg);
+            });
+          }
 
           if (!response.data.can_play) {
             for (let i = 0; i < cards.length; ++i) {
@@ -259,16 +267,18 @@ function socketManager(pkArg) {
         if (response.data.is_creator) {
           startBtn.classList.remove("none");
           startBtn.classList.remove("hidden");
-          startBtn.addEventListener("click", function () {
-            socket.send(
-              JSON.stringify({
-                action: "start_game",
-                request_id: new Date().getTime(),
-                pk: pkArg,
-              })
-            );
-            notifyUsers(pkArg);
-          });
+          if (checkForEventlistener(startBtn)) {
+            startBtn.addEventListener("click", function () {
+              socket.send(
+                JSON.stringify({
+                  action: "start_game",
+                  request_id: new Date().getTime(),
+                  pk: pkArg,
+                })
+              );
+              notifyUsers(pkArg);
+            });
+          }
         }
       }
     }
@@ -290,6 +300,8 @@ function socketManager(pkArg) {
     alert(`[error] ${error.message}`);
   };
 }
+
+function checkListenner(button) {}
 
 function main() {
   const pk = window.location.href.split("=")[1];

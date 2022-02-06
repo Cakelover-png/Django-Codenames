@@ -28,6 +28,14 @@ export const locationHost = window.location.hostname;
 //   }
 // }
 
+export function checkForEventlistener(element) {
+  if (element.getAttribute("listener") !== "true") {
+    element.setAttribute("listener", "true");
+    return true;
+  }
+  return false;
+}
+
 export function setOrRemoveTokens(remove, access = null, refresh = null) {
   if (!remove) {
     if (!access) {
