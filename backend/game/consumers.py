@@ -45,14 +45,12 @@ class GameConsumer(RetrieveModelMixin,
     async def join_game(self, pk, **kwargs):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.add_user_to_game_lobby(game)
-        await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
 
     @action()
     async def leave_game(self, pk, **kwargs):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.remove_user_from_game_lobby(game)
-        await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
 
     @action()
@@ -61,7 +59,6 @@ class GameConsumer(RetrieveModelMixin,
         player = self.scope['user']
         await self.delete_spymaster_and_field_operative(game, player)
         await database_sync_to_async(Spymaster.objects.create)(game_id=game.id, player_id=player.id, team=team)
-        await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
 
     @action()
@@ -70,7 +67,6 @@ class GameConsumer(RetrieveModelMixin,
         player = self.scope['user']
         await self.delete_spymaster_and_field_operative(game, player)
         await database_sync_to_async(FieldOperative.objects.create)(game_id=game.id, player_id=player.id, team=team)
-        await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
 
     @action()
@@ -78,14 +74,12 @@ class GameConsumer(RetrieveModelMixin,
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.set_status_and_turn(game)
         await self.shuffle_and_create_game_cards(game)
-        await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
 
     @action()
     async def play(self, pk, game_card_pk, **kwargs):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.check_and_modify_game_state(game, game_card_pk)
-        await self.notify_users_about_game(game)
         return {}, status.HTTP_200_OK
 
     @action()
