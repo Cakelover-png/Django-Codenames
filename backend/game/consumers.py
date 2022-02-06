@@ -128,13 +128,14 @@ class GameConsumer(RetrieveModelMixin,
 
     @database_sync_to_async
     def shuffle_and_create_game_cards(self, game: Game):
-        cards = random.sample(list(Card.objects.all().values_list('id', flat=True)), 25)
-        game_cards = [GameCard(game_id=game.id, card_id=cards[i], team=TeamType.RED) for i in range(9)]
-        game_cards.extend([GameCard(game_id=game.id, card_id=cards[i], team=TeamType.BLUE) for i in range(9, 17)])
-        game_cards.extend([GameCard(game_id=game.id, card_id=cards[i]) for i in range(17, 24)])
-        game_cards.extend([GameCard(game_id=game.id, card_id=cards[24], is_assassin=True)])
-        random.shuffle(game_cards)
-        GameCard.objects.bulk_create(game_cards)
+        if GameCard.objects.filter(game_id=game.id).count() == 0:
+            cards = random.sample(list(Card.objects.all().values_list('id', flat=True)), 25)
+            game_cards = [GameCard(game_id=game.id, card_id=cards[i], team=TeamType.RED) for i in range(9)]
+            game_cards.extend([GameCard(game_id=game.id, card_id=cards[i], team=TeamType.BLUE) for i in range(9, 17)])
+            game_cards.extend([GameCard(game_id=game.id, card_id=cards[i]) for i in range(17, 24)])
+            game_cards.extend([GameCard(game_id=game.id, card_id=cards[24], is_assassin=True)])
+            random.shuffle(game_cards)
+            GameCard.objects.bulk_create(game_cards)
 
     @database_sync_to_async
     def set_status_and_turn(self, game: Game):
