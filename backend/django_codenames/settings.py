@@ -112,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 #     'localhost:1234/'
 # ]
 
-CORS_ORIGIN_ALLOW_ALL = True;
+CORS_ORIGIN_ALLOW_ALL = True
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 

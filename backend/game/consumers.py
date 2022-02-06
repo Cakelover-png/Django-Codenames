@@ -7,7 +7,6 @@ from django.utils.translation import gettext_lazy as lz
 from djangochannelsrestframework.decorators import action
 from djangochannelsrestframework.generics import GenericAsyncAPIConsumer
 from djangochannelsrestframework.mixins import RetrieveModelMixin
-from djangochannelsrestframework.observer import model_observer
 from djangochannelsrestframework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
@@ -26,6 +25,10 @@ class GameConsumer(RetrieveModelMixin,
     serializer_class = RetrieveGameSerializer
     permission_classes = [IsAuthenticated]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.group_name = None
+
     async def connect(self):
         self.group_name = 'game_' + str(
             (dict((x.split('=') for x in self.scope['query_string'].decode().split("&")))).get('pk'))
@@ -42,19 +45,19 @@ class GameConsumer(RetrieveModelMixin,
         )
 
     @action()
-    async def join_game(self, pk, **kwargs):
+    async def join_game(self, pk, **__):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.add_user_to_game_lobby(game)
         return {}, status.HTTP_200_OK
 
     @action()
-    async def leave_game(self, pk, **kwargs):
+    async def leave_game(self, pk, **__):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.remove_user_from_game_lobby(game)
         return {}, status.HTTP_200_OK
 
     @action()
-    async def become_spymaster(self, pk, team, **kwargs):
+    async def become_spymaster(self, pk, team, **__):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         player = self.scope['user']
         await self.delete_spymaster_and_field_operative(game, player)
@@ -63,7 +66,7 @@ class GameConsumer(RetrieveModelMixin,
         return {}, status.HTTP_200_OK
 
     @action()
-    async def become_field_operative(self, pk, team, **kwargs):
+    async def become_field_operative(self, pk, team, **__):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         player = self.scope['user']
         await self.delete_spymaster_and_field_operative(game, player)
@@ -72,7 +75,7 @@ class GameConsumer(RetrieveModelMixin,
         return {}, status.HTTP_200_OK
 
     @action()
-    async def start_game(self, pk, **kwargs):
+    async def start_game(self, pk, **__):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.set_status_and_turn(game)
         await self.shuffle_and_create_game_cards(game)
@@ -80,14 +83,14 @@ class GameConsumer(RetrieveModelMixin,
         return {}, status.HTTP_200_OK
 
     @action()
-    async def play(self, pk, game_card_pk, **kwargs):
+    async def play(self, pk, game_card_pk, **__):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.check_and_modify_game_state(game, game_card_pk)
         await self.notify_users_about_game()
         return {}, status.HTTP_200_OK
 
     @action()
-    async def end_turn(self, pk, **kwargs):
+    async def end_turn(self, pk, **__):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await database_sync_to_async(game.change_turn)()
         await self.notify_users_about_game()
@@ -101,7 +104,7 @@ class GameConsumer(RetrieveModelMixin,
             }
         )
 
-    async def update_game(self, event: dict):
+    async def update_game(self, **__):
         await self.send(text_data=json.dumps({'action': 'notify_users'}))
 
     @database_sync_to_async
