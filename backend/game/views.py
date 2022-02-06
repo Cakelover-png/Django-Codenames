@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 
 from django_codenames.utils.serializers import SerializerFactory
+from game.choices import GameStatus
 from game.models import Game
 from game.serializers import CreateGameSerializer, ListGameSerializer
 
@@ -10,7 +11,7 @@ from game.serializers import CreateGameSerializer, ListGameSerializer
 class GameViewSet(mixins.CreateModelMixin,
                   mixins.ListModelMixin,
                   GenericViewSet):
-    queryset = Game.objects.select_related('creator')
+    queryset = Game.objects.select_related('creator').filter(status=GameStatus.PENDING).order_by('-created')
     serializer_class = SerializerFactory(create=CreateGameSerializer,
                                          default=ListGameSerializer)
     permission_classes = [IsAuthenticated]
