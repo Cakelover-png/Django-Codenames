@@ -11,18 +11,20 @@
     <main class="main">
       <section class="team team1">
         <div class="info team1Info">
-          <p class="operatives" id="1">Operatives:</p>
+          <p class="lefToGuessRed"></p>
+          <p class="operativeLabel">Operatives:</p>
+          <p class="operatives" id="1"></p>
           <p class="spy">Spymaster:</p>
           <p class="spymaster1">-</p>
-          <button class="spyBtn">Become Spymaster</button>
-          <button class="opBtn">Become Operative</button>
+          <div class="buttonDiv">
+            <button class="spyBtn">Become Spymaster</button>
+            <button class="opBtn">Become Operative</button>
+          </div>
         </div>
       </section>
       <section class="board">
         <div class="row header">
-          <p class="lefToGuessRed"></p>
           <button class="btn startGameBtn hidden">Start Game</button>
-          <p class="lefToGuessBlue"></p>
         </div>
         <div class="row">
           <button class="btn card">-</button>
@@ -64,11 +66,17 @@
         </div>
       </section>
       <section class="team team2">
-        <p class="operatives" id="2">Operatives:</p>
-        <p class="spy">Spymaster:</p>
-        <p class="spymaster2">-</p>
-        <button class="spyBtn">Become Spymaster</button>
-        <button class="opBtn">Become Operative</button>
+        <div class="info team2Info">
+          <p class="lefToGuessBlue"></p>
+          <p class="operativeLabel">Operatives:</p>
+          <p class="operatives" id="2">Operatives:</p>
+          <p class="spy">Spymaster:</p>
+          <p class="spymaster2">-</p>
+          <div class="buttonDiv">
+            <button class="spyBtn">Become Spymaster</button>
+            <button class="opBtn">Become Operative</button>
+          </div>
+        </div>
       </section>
     </main>
     <script src="../scripts/game.js" type="module"></script>
