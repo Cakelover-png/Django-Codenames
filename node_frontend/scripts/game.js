@@ -1,9 +1,9 @@
 "use strict";
 
-import { removeChilds } from "./utils.js";
+import { removeChilds, locationHost } from "./utils.js";
 
 const socket = new WebSocket(
-  `ws://127.0.0.1:8000/ws/game/game/?access_token=${localStorage.getItem(
+  `ws://${locationHost}:8000/ws/game/game/?access_token=${localStorage.getItem(
     "access"
   )}&pk=${window.location.href.split("=")[1]}`
 );

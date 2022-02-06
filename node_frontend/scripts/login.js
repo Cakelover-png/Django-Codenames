@@ -1,10 +1,10 @@
 "use strict";
-import { setOrRemoveTokens } from "./utils.js";
+import { setOrRemoveTokens, locationHost } from "./utils.js";
 import "regenerator-runtime/runtime";
 import axios from "axios";
 const form = document.getElementById("loginForm");
 
-const instance = axios.create({ baseURL: "http://localhost:8000" });
+const instance = axios.create({ baseURL: `http://${locationHost}:8000` });
 async function loginUser() {
   try {
     const response = await instance.post(
@@ -15,7 +15,7 @@ async function loginUser() {
       }
     );
     console.log(response);
-    window.location.href = "http://localhost:1234/lobby.html";
+    window.location.href = `http://${locationHost}:1234/lobby.html`;
     setOrRemoveTokens(false, response.data.access, response.data.refresh);
   } catch (error) {
     console.error(error);

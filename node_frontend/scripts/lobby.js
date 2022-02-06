@@ -5,11 +5,12 @@ import {
   AUTHheader,
   createGameListTags,
   removeChilds,
+  locationHost,
 } from "./utils.js";
 
 import "regenerator-runtime/runtime";
 import axios from "axios";
-const instance = axios.create({ baseURL: "http://localhost:8000" });
+const instance = axios.create({ baseURL: `http://${locationHost}:8000` });
 
 async function getUserName() {
   try {
@@ -88,7 +89,7 @@ function joinButton() {
     if (e.target && e.target.id == "join") {
       const pk = e.target.href.split("=");
       const socket = new WebSocket(
-        `ws://127.0.0.1:8000/ws/game/game/?access_token=${
+        `ws://${locationHost}:8000/ws/game/game/?access_token=${
           AUTHheader.split(" ")[1]
         }&pk=${pk[1]}`
       );

@@ -3,6 +3,7 @@
 // import axios from "axios";
 
 export const AUTHheader = "JWT " + localStorage.getItem("access");
+export const locationHost = window.location.hostname;
 // const instance = axios.create({ baseURL: "http://localhost:8000" });
 // export async function getAUTHheader() {
 //   const accessToken = "JWT " + localStorage.getItem("access");
