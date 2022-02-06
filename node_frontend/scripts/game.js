@@ -301,8 +301,6 @@ function socketManager(pkArg) {
   };
 }
 
-function checkListenner(button) {}
-
 function main() {
   const pk = window.location.href.split("=")[1];
   getData(pk);

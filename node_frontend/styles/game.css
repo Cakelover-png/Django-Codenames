@@ -294,7 +294,7 @@ body {
 
 .spyBtn:hover,
 .opBtn:hover {
-  background-position: 100% 0;
+  background-position: 98% 0;
   -o-transition: all 0.4s ease-in-out;
   -webkit-transition: all 0.4s ease-in-out;
   transition: all 0.4s ease-in-out;
