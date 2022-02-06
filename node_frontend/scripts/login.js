@@ -14,7 +14,6 @@ async function loginUser() {
         "Content-Type": "application/x-www-form-urlencoded",
       }
     );
-    console.log(response);
     window.location.href = `http://${locationHost}:1234/lobby.html`;
     setOrRemoveTokens(false, response.data.access, response.data.refresh);
   } catch (error) {

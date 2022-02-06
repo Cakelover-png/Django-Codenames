@@ -19,7 +19,6 @@ async function getUserName() {
         Authorization: AUTHheader,
       },
     });
-    console.log(response);
     document.querySelector(".userName").textContent = response.data["username"];
   } catch (error) {
     console.error(error);
@@ -37,7 +36,6 @@ async function logout() {
         },
       }
     );
-    console.log(response);
     window.location.href = "./index.html";
     setOrRemoveTokens(true);
   } catch (error) {
@@ -52,7 +50,6 @@ async function getGames() {
         Authorization: AUTHheader,
       },
     });
-    console.log(response);
     for (const game of response.data) {
       createGameListTags(
         game["creator"],
@@ -77,7 +74,6 @@ async function createGames() {
         },
       }
     );
-    console.log(response);
     window.location.href = `./game.html?id=${response.data.id}`;
   } catch (error) {
     console.error(error);
