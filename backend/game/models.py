@@ -1,6 +1,9 @@
+from datetime import timedelta
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import F
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from game.choices import LanguageType, GameStatus, TeamType
@@ -34,6 +37,7 @@ class Game(models.Model):
                                               verbose_name=_('Players in lobby'))
     status = models.IntegerField(verbose_name=_('Status'), choices=GameStatus.choices, default=GameStatus.PENDING)
     last_turn = models.IntegerField(verbose_name=_('Last Turn'), choices=TeamType.choices, blank=True, null=True)
+    guess_time = models.DateTimeField(verbose_name=_('Guess time'), blank=True, null=True)
     created = models.DateTimeField(verbose_name=_('Created date'), auto_now_add=True)
 
     class Meta:
@@ -47,6 +51,10 @@ class Game(models.Model):
     def set_status_finished(self):
         self.status = GameStatus.FINISHED
         self.save(update_fields=['status'])
+
+    def set_guess_time(self):
+        self.guess_time = timezone.now() + timedelta(seconds=180)
+        self.save(update_fields=['guess_time'])
 
 
 class Spymaster(AbstractPlayer):

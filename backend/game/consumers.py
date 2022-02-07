@@ -47,12 +47,6 @@ class GameConsumer(RetrieveModelMixin,
         )
 
     @action()
-    async def join_game(self, pk, **__):
-        game: Game = await database_sync_to_async(self.get_object)(pk=pk)
-        await self.add_user_to_game_lobby(game)
-        return {}, status.HTTP_200_OK
-
-    @action()
     async def leave_game(self, pk, **__):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.remove_user_from_game_lobby(game)
@@ -81,6 +75,7 @@ class GameConsumer(RetrieveModelMixin,
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await self.set_status_and_turn(game)
         await self.shuffle_and_create_game_cards(game)
+        await self.set_guess_time(game)
         await self.notify_users_about_game()
         return {}, status.HTTP_200_OK
 
@@ -95,6 +90,7 @@ class GameConsumer(RetrieveModelMixin,
     async def end_turn(self, pk, **__):
         game: Game = await database_sync_to_async(self.get_object)(pk=pk)
         await database_sync_to_async(game.change_turn)()
+        await self.set_guess_time(game)
         await self.notify_users_about_game()
         return {}, status.HTTP_200_OK
 
@@ -159,10 +155,16 @@ class GameConsumer(RetrieveModelMixin,
             elif game_card_team is None:
                 game_card.set_guessed()
                 game.change_turn()
+                game.set_guess_time()
             elif game_card_team == game.last_turn:
                 game_card.set_guessed()
                 set_finished_if_winner(game, game_card_team)
             else:
                 game_card.set_guessed()
                 game.change_turn()
+                game.set_guess_time()
                 set_finished_if_winner(game, game_card_team)
+
+    @database_sync_to_async
+    def set_guess_time(self, game: Game):
+        game.set_guess_time()
