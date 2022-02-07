@@ -104,7 +104,7 @@ class GameConsumer(RetrieveModelMixin,
             }
         )
 
-    async def update_game(self, **__):
+    async def update_game(self, *_):
         await self.send(text_data=json.dumps({'action': 'notify_users'}))
 
     @database_sync_to_async
