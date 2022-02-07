@@ -7,6 +7,7 @@ const socket = new WebSocket(
     "access"
   )}&pk=${window.location.href.split("=")[1]}`
 );
+let interval;
 
 function getData(pkArg) {
   socket.onopen = function () {
@@ -165,6 +166,9 @@ function socketManager(pkArg) {
         }
         AddCardListener(pkArg);
         if (response.data.status === 1) {
+          const endData = new Date(response.data.guess_time).getTime();
+          timer(endData, pkArg);
+          console.log(endData);
           endBtn.classList.remove("hidden");
           const [info1, info2] = document.querySelectorAll(".info");
           const spyOpBtns = [
@@ -201,6 +205,7 @@ function socketManager(pkArg) {
               }
             }
             endBtn.classList.add("disabled");
+            endBtn.classList.add("noLight");
           } else {
             for (let i = 0; i < cards.length; ++i) {
               if (!cardData[i].is_guessed) {
@@ -208,6 +213,7 @@ function socketManager(pkArg) {
               }
             }
             endBtn.classList.remove("disabled");
+            endBtn.classList.remove("noLight");
           }
         } else if (response.data.status === 2) {
           const spyOpBtns = [
@@ -218,6 +224,9 @@ function socketManager(pkArg) {
           const winner = document.createElement("p");
           winner.classList.add("winner");
           endBtn.classList.add("hidden");
+          clearInterval(interval);
+          const timeElement = document.getElementById("time");
+          parent.removeChild(timeElement);
           for (const card of cards) {
             card.classList.add("disabled");
           }
@@ -274,6 +283,35 @@ function socketManager(pkArg) {
   socket.onerror = function (error) {
     alert(`[error] ${error.message}`);
   };
+}
+
+function timer(milliseconds, pkArg) {
+  const timerElement = document.getElementById("time");
+  const countDownDate = milliseconds + 1000;
+
+  clearInterval(interval);
+  interval = setInterval(function () {
+    const now = new Date().getTime();
+    const distance = countDownDate - now;
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    if (timerElement.classList.contains("none")) {
+      timerElement.classList.remove("none");
+    }
+    timerElement.setAttribute("interval", "true");
+    timerElement.innerHTML = minutes + "m " + seconds + "s ";
+
+    if (distance <= 0) {
+      timerElement.innerHTML = 0 + "m " + 0 + "s ";
+      socket.send(
+        JSON.stringify({
+          action: "end_turn",
+          request_id: new Date().getTime(),
+          pk: pkArg,
+        })
+      );
+    }
+  }, 1000);
 }
 
 function main() {

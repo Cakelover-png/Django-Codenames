@@ -213,6 +213,10 @@ body {
   margin-right: 20px;
 }
 
+.noLight {
+  opacity: 0.4;
+}
+
 .bright {
   opacity: 1;
 }
