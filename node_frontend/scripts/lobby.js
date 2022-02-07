@@ -83,41 +83,24 @@ async function createGames() {
 function joinButton() {
   document.addEventListener("click", function (e) {
     if (e.target && e.target.id == "join") {
-      const pk = e.target.href.split("=");
-      const socket = new WebSocket(
-        `ws://${locationHost}:8000/ws/game/game/?access_token=${
-          AUTHheader.split(" ")[1]
-        }&pk=${pk[1]}`
-      );
-      socket.onopen = function () {
-        socket.send(
-          JSON.stringify({
-            action: "join_game",
-            request_id: new Date().getTime(),
+      try {
+        const pk = e.target.href.split("=");
+        const response = instance.post(
+          "/api/games/games/join_game/",
+          {
             pk: pk[1],
-          })
+          },
+          {
+            headers: {
+              Authorization: AUTHheader,
+            },
+          }
         );
-      };
-
-      socket.onmessage = function (event) {
-        alert(`[message] Data received from server: ${event.data}`);
-      };
-
-      socket.onclose = function (event) {
-        if (event.wasClean) {
-          alert(
-            `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
-          );
-        } else {
-          // e.g. server process killed or network down
-          // event.code is usually 1006 in this case
-          alert("[close] Connection died");
-        }
-      };
-
-      socket.onerror = function (error) {
-        alert(`[error] ${error.message}`);
-      };
+        document.querySelector(".userName").textContent =
+          response.data["username"];
+      } catch (error) {
+        console.error(error);
+      }
     }
   });
 }
