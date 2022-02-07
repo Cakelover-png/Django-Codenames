@@ -17,7 +17,18 @@ async function loginUser() {
     window.location.href = `http://${locationHost}:1234/lobby.html`;
     setOrRemoveTokens(false, response.data.access, response.data.refresh);
   } catch (error) {
-    console.error(error);
+    const message = document.querySelector(".error");
+    const userNameInput = document.getElementById("username");
+    const userPasswordInput = document.getElementById("password");
+    if (error.response.data.detail) {
+      message.textContent = error.response.data.detail;
+    }
+    if (error.response.data.password) {
+      userPasswordInput.placeholder = error.response.data.password;
+    }
+    if (error.response.data.username) {
+      userNameInput.placeholder = error.response.data.username;
+    }
   }
 }
 

@@ -144,3 +144,8 @@ body {
   text-decoration: none;
   color: #f10606;
 }
+
+::placeholder {
+  color: red;
+  opacity: 1;
+}
