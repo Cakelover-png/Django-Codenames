@@ -53,7 +53,7 @@ class Game(models.Model):
         self.save(update_fields=['status'])
 
     def set_guess_time(self):
-        self.guess_time = timezone.now() + timedelta(seconds=180)
+        self.guess_time = timezone.now() + timedelta(seconds=120)
         self.save(update_fields=['guess_time'])
 
 
