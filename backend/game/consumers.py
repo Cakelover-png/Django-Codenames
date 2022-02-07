@@ -13,6 +13,7 @@ from rest_framework.exceptions import ValidationError
 
 from game.choices import TeamType, GameStatus
 from game.models import Game, Spymaster, FieldOperative, Card, GameCard
+from game.permissions import IsInLobby, CanStartGame, HasStatusPending, HasStatusStarted
 from game.serializers import RetrieveGameSerializer
 from game.utils.custom_functions import set_finished_if_winner
 
@@ -23,7 +24,8 @@ class GameConsumer(RetrieveModelMixin,
                                                                        'spymaster__player',
                                                                        'game_cards__card')
     serializer_class = RetrieveGameSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsInLobby, CanStartGame,
+                          HasStatusPending, HasStatusStarted]
 
     def __init__(self, *args, **kwargs):
         super().__init__(args, kwargs)
@@ -129,14 +131,13 @@ class GameConsumer(RetrieveModelMixin,
 
     @database_sync_to_async
     def shuffle_and_create_game_cards(self, game: Game):
-        if GameCard.objects.filter(game_id=game.id).count() == 0:
-            cards = random.sample(list(Card.objects.all().values_list('id', flat=True)), 25)
-            game_cards = [GameCard(game_id=game.id, card_id=cards[i], team=TeamType.RED) for i in range(9)]
-            game_cards.extend([GameCard(game_id=game.id, card_id=cards[i], team=TeamType.BLUE) for i in range(9, 17)])
-            game_cards.extend([GameCard(game_id=game.id, card_id=cards[i]) for i in range(17, 24)])
-            game_cards.extend([GameCard(game_id=game.id, card_id=cards[24], is_assassin=True)])
-            random.shuffle(game_cards)
-            GameCard.objects.bulk_create(game_cards)
+        cards = random.sample(list(Card.objects.all().values_list('id', flat=True)), 25)
+        game_cards = [GameCard(game_id=game.id, card_id=cards[i], team=TeamType.RED) for i in range(9)]
+        game_cards.extend([GameCard(game_id=game.id, card_id=cards[i], team=TeamType.BLUE) for i in range(9, 17)])
+        game_cards.extend([GameCard(game_id=game.id, card_id=cards[i]) for i in range(17, 24)])
+        game_cards.extend([GameCard(game_id=game.id, card_id=cards[24], is_assassin=True)])
+        random.shuffle(game_cards)
+        GameCard.objects.bulk_create(game_cards)
 
     @database_sync_to_async
     def set_status_and_turn(self, game: Game):

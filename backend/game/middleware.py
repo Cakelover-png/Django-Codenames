@@ -8,6 +8,8 @@ from django.db import close_old_connections
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import AccessToken
 
+from game.utils.custom_functions import get_query_params
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'django_codenames.settings')
 django.setup()
 
@@ -38,7 +40,7 @@ class TokenAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
         close_old_connections()
         try:
-            access_token = (dict((x.split('=') for x in scope['query_string'].decode().split("&")))).get('access_token')
+            access_token = get_query_params(scope['query_string']).get('access_token')
         except ValueError:
             access_token = None
         scope['user'] = await get_user(access_token)
