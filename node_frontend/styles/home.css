@@ -9,15 +9,13 @@
 
 body {
   background: linear-gradient(to bottom, #a42ef3, #2a0841);
-  height: 100vh;
-  position: relative;
+  min-height: 100vh;
 }
 
 .header {
-  position: absolute;
-  top: 15%;
-  left: 50%;
-  transform: translateX(-50%);
+  min-height: 40vh;
+  width: 100%;
+  position: relative;
   font-family: "Lobster", cursive;
   font-size: xxx-large;
   letter-spacing: 0.4em;
@@ -26,18 +24,30 @@ body {
 }
 
 .header h1 {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
   color: rgb(245, 161, 161);
   text-shadow: 0 0 2px rgb(12, 12, 12), 0 0 5px rgb(53, 51, 51), 0 0 7px #fff,
     0 0 10px #fff, 0 0 21px #fff, 0 0 42px #f3a4a4, 0 0 82px #f3a4a4,
     0 0 92px #f3a4a4, 0 0 102px #f3a4a4, 0 0 151px #f3a4a4;
 }
 
+.main {
+  min-height: 60vh;
+  width: 100%;
+  position: relative;
+}
+
 .mainEl {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: absolute;
-  top: 50%;
+  text-align: center;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, -20%);
 }
@@ -50,10 +60,9 @@ body {
 }
 
 .loginBtn {
-  margin-bottom: 0.5em;
-  padding: 0.4em 3em 0.4em 4.5em;
-  font-size: xx-large;
-  letter-spacing: 1.5em;
+  padding: 0.8% 10% 0.8% 10%;
+  font-size: 2em;
+  letter-spacing: 2em;
   text-transform: uppercase;
   text-align: center;
   font-family: "Rubik Beastly", cursive;
@@ -69,15 +78,19 @@ body {
   );
 }
 
+.loginBtn span {
+  letter-spacing: 0;
+}
+
 .loginBtn:hover {
   box-shadow: 0px 0px 10px #8f3406, 0px 0px 20px #d34a05, 0px 0px 50px #ff5400;
 }
 
 .registerBtn {
-  margin-top: 0.5em;
-  padding: 0.6em 3em 0.6em 4em;
+  margin-top: 0.8%;
+  padding: 0.6% 6% 0.6% 6%;
   font-family: "Rubik Beastly", cursive;
-  font-size: medium;
+  font-size: 1em;
   letter-spacing: 1em;
   text-transform: uppercase;
   text-align: center;
@@ -92,9 +105,12 @@ body {
   transition: box-shadow ease-in 0.1s, transform ease 0.2s;
 }
 
+.registerBtn span {
+  letter-spacing: 0;
+}
+
 .loginDiv {
-  z-index: 2;
-  margin-bottom: 0.7em;
+  margin-bottom: 0.5%;
 }
 
 .registerDiv {
@@ -103,11 +119,123 @@ body {
   justify-content: center;
   position: relative;
   border: none;
-  z-index: 1;
-  margin-top: 0.7em;
+  margin-top: 0.5%;
 }
 
 .registerBtn:hover {
   box-shadow: 0px 0px 10px #a56907, 0px 0px 15px #ac6b03,
     0px 0px 20px rgb(117, 74, 5);
+}
+
+@media screen and (max-width: 825px) {
+  .header h1 {
+    font-size: 1.4em;
+    top: 50%;
+  }
+
+  .mainEl {
+    top: 15%;
+  }
+
+  .loginBtn {
+    /* letter-spacing: 1.5em; */
+    font-size: 1.5em;
+  }
+
+  .registerBtn {
+    /* letter-spacing: 0.7em; */
+    font-size: 0.85em;
+  }
+}
+
+@media screen and (max-width: 625px) {
+  .header h1 {
+    font-size: 1em;
+    top: 60%;
+  }
+
+  .mainEl {
+    top: 10%;
+  }
+
+  .loginBtn {
+    letter-spacing: 1.5em;
+    font-size: 1.3em;
+  }
+
+  .registerBtn {
+    letter-spacing: 0.85em;
+    font-size: 0.7em;
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .header h1 {
+    font-size: 0.9em;
+    letter-spacing: 0.3em;
+    top: 65%;
+  }
+
+  .mainEl {
+    top: 5%;
+  }
+
+  .loginBtn {
+    letter-spacing: 1.4em;
+    font-size: 1.2em;
+  }
+
+  .registerBtn {
+    letter-spacing: 0.8em;
+    font-size: 0.65em;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .header h1 {
+    font-size: 0.8em;
+    top: 70%;
+    letter-spacing: 0.2em;
+  }
+
+  .mainEl {
+    top: 5%;
+  }
+
+  .loginBtn {
+    letter-spacing: 1.2em;
+    font-size: 1em;
+  }
+
+  .registerBtn {
+    letter-spacing: 0.65em;
+    font-size: 0.55em;
+  }
+}
+
+@media screen and (max-width: 355px) {
+  .header h1 {
+    font-size: 0.7em;
+    top: 71%;
+  }
+
+  .mainEl {
+    top: 4%;
+  }
+
+  .loginBtn {
+    letter-spacing: 1em;
+    font-size: 0.8em;
+  }
+
+  .registerBtn {
+    letter-spacing: 0.5em;
+    font-size: 0.4em;
+  }
+}
+
+@media screen and (max-height: 425px) {
+  .mainEl {
+    top: 30%;
+  }
 }
