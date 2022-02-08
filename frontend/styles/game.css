@@ -23,8 +23,18 @@ body {
   justify-content: space-between;
 }
 
+.board {
+  width: 50%;
+  text-align: center;
+}
+
+.team {
+  width: 20%;
+}
+
 .row {
   margin-top: 27px;
+  width: 100%;
 }
 
 .header {
@@ -64,10 +74,10 @@ body {
 }
 
 .card {
-  width: 170px;
+  width: 16%;
   height: 80px;
   border-radius: 5px;
-  margin-right: 23px;
+  margin-right: 3%;
   background-color: #f3c3bb;
   outline: 10px solid #fae1dd;
   cursor: pointer;
@@ -186,7 +196,7 @@ body {
 
 .info {
   height: auto;
-  width: 200px;
+  width: 100%;
   padding: 20px 10px;
   border-radius: 10px;
   opacity: 0.6;
