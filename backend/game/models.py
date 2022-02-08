@@ -56,6 +56,9 @@ class Game(models.Model):
         self.guess_time = timezone.now() + timedelta(seconds=120)
         self.save(update_fields=['guess_time'])
 
+    def __str__(self):
+        return f"{self.id} | {self.creator}'s Game"
+
 
 class Spymaster(AbstractPlayer):
     class Meta:
