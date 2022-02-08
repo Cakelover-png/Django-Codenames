@@ -298,11 +298,19 @@ function timer(milliseconds, pkArg) {
     if (timerElement.classList.contains("none")) {
       timerElement.classList.remove("none");
     }
-    timerElement.setAttribute("interval", "true");
-    timerElement.innerHTML = minutes + "m " + seconds + "s ";
+    if (seconds < 10) {
+      timerElement.innerHTML = minutes + ":0" + seconds;
+    } else {
+      timerElement.innerHTML = minutes + ":" + seconds;
+    }
 
+    timerElement.classList.remove("pulse");
+    if (distance <= 30000) {
+      timerElement.classList.add("pulse");
+    }
     if (distance <= 0) {
-      timerElement.innerHTML = 0 + "m " + 0 + "s ";
+      timerElement.classList.remove("pulse");
+      timerElement.innerHTML = "0:00";
       socket.send(
         JSON.stringify({
           action: "end_turn",
