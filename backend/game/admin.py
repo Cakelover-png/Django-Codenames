@@ -1,6 +1,4 @@
 from django.contrib import admin
-from django.contrib.auth.forms import UserChangeForm
-from django.forms import BaseInlineFormSet
 
 from game.models import Game, Spymaster, FieldOperative, GameCard, Card
 
@@ -9,7 +7,16 @@ from game.models import Game, Spymaster, FieldOperative, GameCard, Card
 class CardAdmin(admin.ModelAdmin):
     search_fields = ('word',)
     list_filter = ('language',)
-    list_display = ('word', 'language')
+    list_display = ('word', 'language', 'is_active')
+    actions = ['set_active', 'set_not_active']
+
+    @admin.action(description='Mark selected stories as active')
+    def set_active(self, request, queryset):
+        queryset.update(is_active=True)
+
+    @admin.action(description='Mark selected stories as not active')
+    def set_not_active(self, request, queryset):
+        queryset.update(is_active=False)
 
 
 @admin.register(FieldOperative)

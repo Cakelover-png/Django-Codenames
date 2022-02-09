@@ -99,6 +99,7 @@ class GameCard(models.Model):
 class Card(models.Model):
     word = models.CharField(verbose_name=_('Word'), max_length=20, unique=True)
     language = models.IntegerField(verbose_name=_('Language'), choices=LanguageType.choices)
+    is_active = models.BooleanField(verbose_name=_('Is Active'), default=True)
 
     class Meta:
         verbose_name = _('Card')

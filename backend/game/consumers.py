@@ -127,7 +127,7 @@ class GameConsumer(RetrieveModelMixin,
 
     @database_sync_to_async
     def shuffle_and_create_game_cards(self, game: Game):
-        cards = random.sample(list(Card.objects.all().values_list('id', flat=True)), 25)
+        cards = random.sample(list(Card.objects.filter(is_active=True).values_list('id', flat=True)), 25)
         game_cards = [GameCard(game_id=game.id, card_id=cards[i], team=TeamType.RED) for i in range(9)]
         game_cards.extend([GameCard(game_id=game.id, card_id=cards[i], team=TeamType.BLUE) for i in range(9, 17)])
         game_cards.extend([GameCard(game_id=game.id, card_id=cards[i]) for i in range(17, 24)])
