@@ -291,8 +291,18 @@ function timer(milliseconds, pkArg) {
 
   clearInterval(interval);
   interval = setInterval(function () {
-    const now = new Date().getTime();
-    const distance = countDownDate - now;
+    const now = new Date();
+    const time_now = Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate(),
+      now.getUTCHours(),
+      now.getUTCMinutes(),
+      now.getUTCSeconds(),
+      now.getUTCMilliseconds()
+    );
+    const distance = countDownDate - time_now;
+    console.log(distance);
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
     if (timerElement.classList.contains("none")) {
