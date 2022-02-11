@@ -36,8 +36,9 @@ class Game(models.Model):
                                               related_name='games',
                                               verbose_name=_('Players in lobby'))
     status = models.IntegerField(verbose_name=_('Status'), choices=GameStatus.choices, default=GameStatus.PENDING)
-    last_turn = models.IntegerField(verbose_name=_('Last Turn'), choices=TeamType.choices, blank=True, null=True)
-    guess_time = models.DateTimeField(verbose_name=_('Guess time'), blank=True, null=True)
+    turn = models.IntegerField(verbose_name=_('Current Turn'), choices=TeamType.choices, blank=True, null=True)
+    time_for_last_turn = models.DateTimeField(verbose_name=_('Time For Last Turn'), blank=True, null=True)
+    time_for_turn_change = models.DateTimeField(verbose_name=_('Time For Turn Change'), blank=True, null=True)
     created = models.DateTimeField(verbose_name=_('Created date'), auto_now_add=True)
 
     class Meta:
@@ -45,16 +46,18 @@ class Game(models.Model):
         verbose_name_plural = _('Games')
 
     def change_turn(self):
-        self.last_turn = TeamType.BLUE - F('last_turn')
-        self.save(update_fields=['last_turn'])
+        self.turn = TeamType.BLUE - F('turn')
+        self.save(update_fields=['turn'])
 
     def set_status_finished(self):
         self.status = GameStatus.FINISHED
         self.save(update_fields=['status'])
 
-    def set_guess_time(self):
-        self.guess_time = timezone.now() + timedelta(seconds=120)
-        self.save(update_fields=['guess_time'])
+    def set_turn_time(self):
+        now = timezone.now()
+        self.time_for_last_turn = now
+        self.time_for_turn_change = now + timedelta(seconds=120)
+        self.save(update_fields=['time_for_last_turn', 'time_for_turn_change'])
 
     def __str__(self):
         return f"{self.id} | {self.creator}'s Game"

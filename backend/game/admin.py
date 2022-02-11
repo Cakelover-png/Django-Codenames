@@ -112,6 +112,6 @@ class GameCardInline(admin.TabularInline):
 class GameAdmin(admin.ModelAdmin):
     list_select_related = ('creator',)
     search_fields = ('creator__username', '=id')
-    list_filter = ('last_turn', 'status')
-    list_display = ('id', 'creator', 'last_turn', 'status', 'created')
+    list_filter = ('turn', 'status')
+    list_display = ('id', 'creator', 'turn', 'status', 'created')
     inlines = (GameCardInline,)

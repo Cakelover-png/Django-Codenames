@@ -70,7 +70,7 @@ class RetrieveGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ('id', 'field_operatives', 'spymasters', 'is_creator',
-                  'game_cards', 'status', 'last_turn', 'can_play', 'guess_time',
+                  'game_cards', 'status', 'turn', 'can_play', 'guess_time',
                   'left_red_card_count', 'left_blue_card_count')
 
     @staticmethod
@@ -98,8 +98,8 @@ class RetrieveGameSerializer(serializers.ModelSerializer):
 
     def get_can_play(self, obj: Game):
         user = self.context['scope']['user']
-        last_turn = obj.last_turn
-        return obj.fieldoperative.filter(player_id=user.id, team=last_turn).exists()
+        turn = obj.turn
+        return obj.fieldoperative.filter(player_id=user.id, team=turn).exists()
 
     def get_is_creator(self, obj: Game):
         user = self.context['scope']['user']
@@ -126,7 +126,7 @@ class ListGameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Game
-        exclude = ('players_in_lobby', 'last_turn')
+        exclude = ('players_in_lobby', 'turn')
 
     @staticmethod
     def get_creator(obj: Game):
