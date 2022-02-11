@@ -3,6 +3,7 @@ import random
 
 from channels.db import database_sync_to_async
 from django.contrib.auth.models import User
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as lz
 from djangochannelsrestframework.decorators import action
 from djangochannelsrestframework.generics import GenericAsyncAPIConsumer
@@ -93,6 +94,10 @@ class GameConsumer(RetrieveModelMixin,
         await self.set_turn_time(game)
         await self.notify_users_about_game()
         return {}, status.HTTP_200_OK
+
+    @action()
+    async def retrieve_time(self, **__):
+        return {'time': timezone.now()}, status.HTTP_200_OK
 
     async def notify_users_about_game(self):
         await self.channel_layer.group_send(

@@ -37,7 +37,6 @@ class Game(models.Model):
                                               verbose_name=_('Players in lobby'))
     status = models.IntegerField(verbose_name=_('Status'), choices=GameStatus.choices, default=GameStatus.PENDING)
     turn = models.IntegerField(verbose_name=_('Current Turn'), choices=TeamType.choices, blank=True, null=True)
-    time_for_last_turn = models.DateTimeField(verbose_name=_('Time For Last Turn'), blank=True, null=True)
     time_for_turn_change = models.DateTimeField(verbose_name=_('Time For Turn Change'), blank=True, null=True)
     created = models.DateTimeField(verbose_name=_('Created date'), auto_now_add=True)
 
@@ -54,10 +53,8 @@ class Game(models.Model):
         self.save(update_fields=['status'])
 
     def set_turn_time(self):
-        now = timezone.now()
-        self.time_for_last_turn = now
-        self.time_for_turn_change = now + timedelta(seconds=120)
-        self.save(update_fields=['time_for_last_turn', 'time_for_turn_change'])
+        self.time_for_turn_change = timezone.now() + timedelta(seconds=120)
+        self.save(update_fields=['time_for_turn_change'])
 
     def __str__(self):
         return f"{self.id} | {self.creator}'s Game"

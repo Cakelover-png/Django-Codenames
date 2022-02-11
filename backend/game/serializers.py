@@ -70,7 +70,7 @@ class RetrieveGameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ('id', 'field_operatives', 'spymasters', 'is_creator',
-                  'game_cards', 'status', 'turn', 'can_play', 'time_for_last_turn',
+                  'game_cards', 'status', 'turn', 'can_play',
                   'time_for_turn_change', 'left_red_card_count', 'left_blue_card_count')
 
     @staticmethod
