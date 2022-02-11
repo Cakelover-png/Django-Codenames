@@ -8,6 +8,7 @@ const socket = new WebSocket(
   )}&pk=${window.location.href.split("=")[1]}`
 );
 let interval;
+let timeNow;
 
 function getData(pkArg) {
   socket.onopen = function () {
@@ -71,6 +72,13 @@ function retrieveAction(pkArg) {
       action: "retrieve",
       request_id: new Date().getTime(),
       pk: pkArg,
+    })
+  );
+
+  socket.send(
+    JSON.stringify({
+      action: "retrieve_time",
+      request_id: new Date().getTime(),
     })
   );
 }
@@ -166,9 +174,19 @@ function socketManager(pkArg) {
         }
         AddCardListener(pkArg);
         if (response.data.status === 1) {
-          const endData = new Date(response.data.guess_time).getTime();
-          timer(endData, pkArg);
-          console.log(endData);
+          const endDate = new Date(response.data.time_for_turn_change);
+          const utc_timestamp = Date.UTC(
+            endDate.getUTCFullYear(),
+            endDate.getUTCMonth(),
+            endDate.getUTCDate(),
+            endDate.getUTCHours(),
+            endDate.getUTCMinutes(),
+            endDate.getUTCSeconds(),
+            endDate.getUTCMilliseconds()
+          );
+          // console.log(response.data.time_for_turn_change + "retrieve");
+          console.log(utc_timestamp);
+          timer(utc_timestamp, pkArg);
           endBtn.classList.remove("hidden");
           const [info1, info2] = document.querySelectorAll(".info");
           const spyOpBtns = [
@@ -179,7 +197,7 @@ function socketManager(pkArg) {
           for (const btn of spyOpBtns) {
             btn.classList.add("none");
           }
-          if (response.data.last_turn === 1) {
+          if (response.data.turn === 1) {
             info2.classList.add("brightDiv");
             info1.classList.remove("brightDiv");
           } else {
@@ -235,7 +253,7 @@ function socketManager(pkArg) {
             btn.classList.add("none");
           }
 
-          if (response.data.last_turn === 0) {
+          if (response.data.turn === 0) {
             winner.textContent = "Red Team Won!";
           } else {
             winner.textContent = "Blue Team Won!";
@@ -265,6 +283,8 @@ function socketManager(pkArg) {
           }
         }
       }
+    } else if (response.action === "retrieve_time") {
+      timeNow = new Date(response.data.time).getTime();
     }
   };
 
@@ -285,24 +305,15 @@ function socketManager(pkArg) {
   };
 }
 
-function timer(milliseconds, pkArg) {
+function timer(endMilliseconds, pkArg) {
   const timerElement = document.getElementById("time");
-  const countDownDate = milliseconds + 1000;
+  const countDownDate = endMilliseconds;
 
   clearInterval(interval);
   interval = setInterval(function () {
-    const now = new Date();
-    const time_now = Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate(),
-      now.getUTCHours(),
-      now.getUTCMinutes(),
-      now.getUTCSeconds(),
-      now.getUTCMilliseconds()
-    );
-    const distance = countDownDate - time_now;
-    console.log(distance);
+    const now = timeNow;
+    timeNow += 1000;
+    const distance = countDownDate - now;
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
     if (timerElement.classList.contains("none")) {

@@ -97,8 +97,8 @@ class GameConsumer(RetrieveModelMixin,
 
     @action()
     async def retrieve_time(self, **__):
-        return {'time': timezone.now()}, status.HTTP_200_OK
-
+        return {'time': timezone.now().isoformat()}, status.HTTP_200_OK
+           
     async def notify_users_about_game(self):
         await self.channel_layer.group_send(
             self.group_name,
